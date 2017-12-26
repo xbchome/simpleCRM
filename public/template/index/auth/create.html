@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/_head_index" /}}
+
+    <title>添加权限</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        添加权限
+    </blockquote>
+<form class="layui-form" id="form-auth-add">
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入模块名" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否为菜单</label>
+        <div class="layui-input-block">
+            <input type="radio" name="menu" value="0" title="是" checked="">
+            <input type="radio" name="menu" value="1" title="否">
+            <!--<input type="radio" name="menu" value="禁" title="禁用" disabled="">-->
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级</label>
+        <div class="layui-input-block">
+            <select name="pid" lay-filter="aihao">
+                <option value="0">顶级菜单</option>
+                <option value="1">写作</option>
+                <option value="2" selected="">阅读</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">模块</label>
+        <div class="layui-input-block">
+            <input type="text" name="module" lay-verify="title" autocomplete="off" placeholder="请输入模块名" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">控制器</label>
+        <div class="layui-input-block">
+            <input type="text" name="controller" lay-verify="title" autocomplete="off" placeholder="请输入控制器名" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">方法</label>
+        <div class="layui-input-block">
+            <input type="text" name="action" lay-verify="title" autocomplete="off" placeholder="请输入控制器名" class="layui-input">
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单图标</label>
+    <div class="layui-upload">
+        <button type="button" class="layui-btn" id="test1">上传图片</button>
+        <div class="layui-upload-list">
+            <input type="file" name="image" />
+            <img class="layui-upload-img" id="demo1">
+            <p id="demoText"></p>
+        </div>
+    </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<!-- 示例-970 -->
+
+</div>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            console.log(data);
+            var form = new FormData(document.getElementById("form-auth-add"));
+            $.ajax({
+                url:"{{:url('index/Auth/save')}}",
+                async:false,
+                contentType:false,
+                processData:false,
+                data:form,
+                dataType:"json",
+                type:"POST",
+                success: function (data) {
+                    console.log(data);
+                },
+                error:function() {
+
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+   $('#test1').click(function(){
+       $('input[name=image]').click();
+   });
+
+</script>
+
+</body>
+</html>

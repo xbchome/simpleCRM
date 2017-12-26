@@ -10,3 +10,13 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+
+function myJson($code =2000,$msg='success',$data=[])
+{
+    $data = [
+        'code'=> $code,
+        'msg'=> $msg,
+        'data'=> $data,
+    ];
+    return json($data);
+}
