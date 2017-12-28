@@ -17,9 +17,9 @@
         <table class="layui-table">
             <colgroup>
                 <col width="150">
-                <col width="200">
+                <col >
                 <col>
-                <col width="260">
+                <col width="180">
             </colgroup>
             <thead>
             <tr>
@@ -30,16 +30,15 @@
             </tr>
             </thead>
             <tbody>
-            {{foreach $data as $value }}
+            {{foreach $fram_data as $value }}
             <tr>
                 <td>{{$value['id']}}</td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['describes']}}</td>
                 <td>
-                    <button class="layui-btn" title="编辑" onclick="Win10.openUrl('{{:url(\'index/UserGroup/edit\',[\'id\'=>$value[\'id\']])}}',
-                 '修改用户组')"><i class="layui-icon"></i></button>
-                    <button class="layui-btn" onclick="Win10.openUrl('{{:url(\'index/UserGroup/allotAuthShow\',[\'id\'=>$value[\'id\']])}}',
-                 '权限分配')" title="分配权限"><i class="layui-icon"></i></button>
+                    <button class="layui-btn" title="编辑" onclick="Win10.openUrl('{{:url(\'index/Framework/edit\',[\'id\'=>$value[\'id\']])}}',
+                 '编辑组织架构')"><i class="layui-icon"></i></button>
+
                     <button class="layui-btn layui-btn-danger" onclick="deletes({{$value['id']}})" title="删除"><i class="layui-icon"></i></button>
                 </td>
             </tr>
@@ -53,14 +52,9 @@
     // 删除用户组
     function deletes(id)
     {
-        if(id==1)
-        {
-            layer.msg('超级管理员无法删除！',{icon:5});
-            return false;
-        }
         layer.confirm('请确认操作',{but:['确定','取消']},function () {
             $.ajax({
-                url:"{{:url('index/UserGroup/delete')}}",
+                url:"{{:url('index/Framework/delete')}}",
                 data:{id:id},
                 dataType:"json",
                 type:"POST",

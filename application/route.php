@@ -14,12 +14,15 @@ Route::get([
     'create-user-group' => 'index/UserGroup/create',
     'edit-userGroup'    => 'index/UserGroup/edit',
     'show-framework'    => 'index/Framework/index',    // 显示组织架构
-    'create-framework'   => 'index/Framework/create',    // 显示组织架构添加页面
+    'create-framework'  => 'index/Framework/create',    // 显示组织架构添加页面
+    'edit-framework'    => 'index/Framework/edit'
 ]);
 
 Route::post([
     'save-userGroup' => 'index/UserGroup/save',
     'update-userGroup'  => 'index/UserGroup/update',
     'del-userGroup'     => 'index/UserGroup/delete',
-    'save-frameword'    => 'index/Framework/save'
+    'save-frameword'    => 'index/Framework/save',
+    'update-frameword'  => 'index/Framework/update',  // 组织架构修改提交
+    'del-frameword'     => 'index/Framework/delete',  // 删除组织架构
 ]);

@@ -14,9 +14,10 @@
     <form class="layui-form" id="form-auth-add">
         <div class="layui-form-item">
             {{:token()}}
+            <input type="hidden" value="{{$datas['id']}}" name="id" />
             <label class="layui-form-label">组织架构</label>
             <div class="layui-input-block">
-                <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="组织架构" class="layui-input">
+                <input type="text" name="title" lay-verify="title" value="{{$datas['title']}}" autocomplete="off" placeholder="组织架构" class="layui-input">
             </div>
         </div>
 
@@ -25,19 +26,20 @@
             <div class="layui-input-block">
                 <select name="pid" lay-filter="aihao">
                     <option value="0">顶级架构</option>
+                    {{php}} $checked[$datas['pid']] = 'selected'; {{/php}}
                     {{foreach $data as $vo }}
-                    <option value="{{$vo['id']}}">{{$vo['title']}}</option>
+                    <option value="{{$vo['id']}}"  {{php}}echo @$checked[$vo['id']];{{/php}} >{{$vo['title']}}</option>
                     {{/foreach}}
                 </select>
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">描述</label>
-        <div class="layui-input-block">
-            <textarea placeholder="请输入内容" name="describes" class="layui-textarea"></textarea>
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="describes" class="layui-textarea">{{$datas['describes']}}</textarea>
+            </div>
         </div>
-    </div>
 
         <br/>
 
@@ -81,7 +83,7 @@
             }
             var form = new FormData(document.getElementById("form-auth-add"));
             $.ajax({
-                url:"{{:url('index/Framework/save')}}",
+                url:"{{:url('index/Framework/update')}}",
                 async:false,
                 contentType:false,
                 processData:false,

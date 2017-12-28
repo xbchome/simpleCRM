@@ -2,8 +2,12 @@
 
 namespace app\index\controller;
 
+use my\RecursionType;
 use think\Controller;
+use think\Exception;
+use think\Log;
 use think\Request;
+use app\index\model\Framework as FrameworkModel;
 
 class Framework extends Controller
 {
@@ -14,8 +18,10 @@ class Framework extends Controller
      */
     public function index()
     {
+        $data = FrameworkModel::all();
+        $data = RecursionType::getFrameworks($data);
         return view('',[
-            'data'  => []
+            'fram_data'  => $data
         ]);
     }
 
@@ -26,8 +32,11 @@ class Framework extends Controller
      */
     public function create()
     {
-        //
-        return view('');
+        $data = FrameworkModel::all();
+        $data = RecursionType::getFrameworks($data);
+        return view('',[
+            'data' => $data
+        ]);
     }
 
     /**
@@ -38,7 +47,25 @@ class Framework extends Controller
      */
     public function save(Request $request)
     {
-        dump($request->post());
+        $data = [
+            'title' => $request->post('title',null,'htmlspecialchars'),
+            'pid'   => $request->post('pid',0),
+            'describes' => $request->post('describes','','htmlspecialchars'),
+            '__token__' => $request->post('__token__')
+        ];
+
+        $validate = validate('FrameworkValidate');
+        if(!$validate->scene('add')->check($data))
+            return myJson(-1,$validate->getError());
+        $data['create_time'] = time();
+        unset($data['__token__']);
+        try {
+            FrameworkModel::create($data);
+            return myJson();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return myJson(-1,$exception->getMessage());
+        }
     }
 
     /**
@@ -60,7 +87,21 @@ class Framework extends Controller
      */
     public function edit($id)
     {
-        //
+        if(!is_numeric($id))
+            die('请返回刷新');
+        $dataS = FrameworkModel::get($id);
+        $data = FrameworkModel::all();
+
+        $data = RecursionType::getFrameworks($data);
+        foreach ($data as $key=>$value)
+        {
+            if($dataS['id']===$value['id'])
+                unset($data[$key]);
+        }
+        return view('',[
+            'data' => $data,
+            'datas'  =>$dataS
+        ]);
     }
 
     /**
@@ -72,7 +113,27 @@ class Framework extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(!is_numeric($id))
+            return myJson(-1,'请刷新后重试！');
+        $data = [
+            'title' => $request->post('title',null,'htmlspecialchars'),
+            'pid'   => $request->post('pid',0),
+            'describes' => $request->post('describes','','htmlspecialchars'),
+            '__token__' => $request->post('__token__')
+        ];
+
+        $validate = validate('FrameworkValidate');
+        if(!$validate->scene('add')->check($data))
+            return myJson(-1,$validate->getError());
+//        $data['create_time'] = time();
+        unset($data['__token__']);
+        try {
+            FrameworkModel::where('id','=',$id)->update($data);
+            return myJson();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return myJson(-1,$exception->getMessage());
+        }
     }
 
     /**
@@ -83,6 +144,17 @@ class Framework extends Controller
      */
     public function delete($id)
     {
-        //
+        if(!is_numeric($id))
+            return myJson(-1,'请刷新后重试！');
+        $info = FrameworkModel::where('pid','=',$id)->count('id');
+        if($info>=1)
+            return myJson(-1,'此架构下还有子架构存在无法删除！');
+        try {
+            FrameworkModel::destroy($id);
+            return myJson();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return myJson(-1,'请刷新后在试！');
+        }
     }
 }

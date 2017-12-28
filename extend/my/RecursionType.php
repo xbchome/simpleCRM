@@ -23,10 +23,12 @@ class RecursionType
                 unset($data[$key]);
                 if($level==0)
                 {
-                    $temp_array[$key]['son'] = $this->getArray($data,$value['id'],++$level);
+                    $temp_array[$key]['son'] =[];
+                    $temp_array[$key]['son'] = $this->getArray($data,$value['id'],$level+1);
                 }else
                 {
-                    $temp_array2=$this->getArray($data,$value['id'],++$level);
+
+                    $temp_array2=$this->getArray($data,$value['id'],$level+1);
                     $temp_array=array_merge($temp_array,$temp_array2);
                 }
 
@@ -37,6 +39,12 @@ class RecursionType
     }
 
 
+    /**
+     * @param $data 要递归的数据
+     * @param int $pid  // pid
+     * @param int $level // 层级
+     * @return array
+     */
     public static function getNbsp($data,$pid=0,$level=0)
     {
         $temp_array = [];
@@ -52,11 +60,37 @@ class RecursionType
                     $temp_array[$key] = $data[$key];
                     $temp_array[$key]['title'] = $nbsp.' '.$data[$key]['title'];
                     unset($data[$key]);
-                    $temp_array2= self::getNbsp($data,$value['id'],++$level);
+                    $temp_array2= self::getNbsp($data,$value['id'],$level+1);
                     $temp_array=array_merge($temp_array,$temp_array2);
 
             }
         }
         return $temp_array;
     }
+
+    public static function getFrameworks($data,$pid=0,$level=1)
+    {
+        $tempa = [];
+        $tempb = [];
+
+        $nbsp = str_repeat('&nbsp;&nbsp;&nbsp;',$level);
+        if($level>1)
+            $nbsp.='├';
+        foreach ($data as $key=>$value)
+        {
+            if($pid == $value['pid'])
+            {
+
+                unset($data[$key]);
+                $tempb = self::getFrameworks($data,$value['id'],++$level);
+                $value['title'] =$nbsp.''.$value['title'];
+                if(empty($tempb))
+                    $value['title'] = str_replace('├','∟',$value['title']);
+                $tempa[] = $value;
+                $tempa = array_merge($tempa,$tempb);
+            }
+        }
+        return $tempa;
+    }
+
 }
