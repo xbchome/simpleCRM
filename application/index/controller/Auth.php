@@ -2,8 +2,14 @@
 
 namespace app\index\controller;
 
+use app\index\model\AuthRule;
+use app\index\validate\AuthGroup;
+
+use my\RecursionType;
 use think\Controller;
+use think\Exception;
 use think\Request;
+use app\index\model\AuthGroup as AuthGroupModel;
 
 class Auth extends Controller
 {
@@ -14,7 +20,10 @@ class Auth extends Controller
      */
     public function index()
     {
-        return view('');
+        $data = AuthGroupModel::all();
+        return view('',[
+            'authGroup' => $data
+        ]);
     }
 
     /**
@@ -24,7 +33,15 @@ class Auth extends Controller
      */
     public function create()
     {
-        return view('');
+//        $data = AuthRule::all();
+       $data = db('auth_rule')->select();
+       // $s = (new \my\RecursionType())->getArray($data);
+        $data = RecursionType::getNbsp($data);
+        //dump($s);
+
+        return view('',[
+            'authRule'  => $data
+        ]);
     }
 
     /**
@@ -37,9 +54,9 @@ class Auth extends Controller
     {
         //
         $model = input('post.module',null,'htmlspecialchars,lcfirst');
-        $action = input('post.ation',null,'htmlspecialchars,lcfirst');
+        $action = input('post.action',null,'htmlspecialchars,lcfirst');
         $controller = input('post.controller',null,'htmlspecialchars,ucfirst');
-        $name = $model.'/'.$controller.''.$action;
+        $name = $model.'/'.$controller.'/'.$action;
        if($model===null || $action=== null || $controller === null)
            return myJson(-1,$name);
 
@@ -53,8 +70,27 @@ class Auth extends Controller
        $validate =  validate('AuthValidate');
         if(!$validate->scene('add')->check($data))
             return myJson(-1,$validate->getError());
+        // 开始上传图片
+        $file = request()->file('image');
+        if($file)
+        {
+           $info = $file->move(ROOT_PATH.'public'.DS.'uploads');
+           if($info)
+           {
+              $imageName = $info->getSaveName();
+               $data['image'] = str_replace('\\','/',$imageName);
+           }else{
+            return myJson(-1,$file->getError());
+           }
+        }
 
-        return json($data);
+        try{
+            AuthRule::create($data);
+            return myJson();
+        }catch (Exception $exception)
+        {
+            return myJson(-1,$exception->getMessage());
+        }
     }
 
     /**
@@ -100,5 +136,11 @@ class Auth extends Controller
     public function delete($id)
     {
         //
+    }
+
+    // 增加用户组
+    public function addUserGroup()
+    {
+
     }
 }

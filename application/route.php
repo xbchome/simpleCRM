@@ -9,13 +9,17 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-return [
-    '__pattern__' => [
-        'name' => '\w+',
-    ],
-    '[hello]'     => [
-        ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
-        ':name' => ['index/hello', ['method' => 'post']],
-    ],
+use think\Route;
+Route::get([
+    'create-user-group' => 'index/UserGroup/create',
+    'edit-userGroup'    => 'index/UserGroup/edit',
+    'show-framework'    => 'index/Framework/index',    // 显示组织架构
+    'create-framework'   => 'index/Framework/create',    // 显示组织架构添加页面
+]);
 
-];
+Route::post([
+    'save-userGroup' => 'index/UserGroup/save',
+    'update-userGroup'  => 'index/UserGroup/update',
+    'del-userGroup'     => 'index/UserGroup/delete',
+    'save-frameword'    => 'index/Framework/save'
+]);

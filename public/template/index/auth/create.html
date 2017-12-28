@@ -15,15 +15,15 @@
     <div class="layui-form-item">
         <label class="layui-form-label">权限名称</label>
         <div class="layui-input-block">
-            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入模块名" class="layui-input">
+            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入权限名称" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">是否为菜单</label>
         <div class="layui-input-block">
-            <input type="radio" name="menu" value="0" title="是" checked="">
-            <input type="radio" name="menu" value="1" title="否">
+            <input type="radio" name="menu" value="1" title="是" checked="">
+            <input type="radio" name="menu" value="0" title="否">
             <!--<input type="radio" name="menu" value="禁" title="禁用" disabled="">-->
         </div>
     </div>
@@ -33,8 +33,10 @@
         <div class="layui-input-block">
             <select name="pid" lay-filter="aihao">
                 <option value="0">顶级菜单</option>
-                <option value="1">写作</option>
-                <option value="2" selected="">阅读</option>
+                {{foreach $authRule as $value }}
+                <option value="{{$value['id']}}">{{$value['title']}}</option>
+                {{/foreach}}
+
             </select>
         </div>
     </div>
@@ -117,7 +119,12 @@
                 dataType:"json",
                 type:"POST",
                 success: function (data) {
-                    console.log(data);
+                  if(data.code==2000)
+                  {
+                    layer.alert('添加成功!',function(){
+                        window.location.reload();
+                    });
+                  }
                 },
                 error:function() {
 

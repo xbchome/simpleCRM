@@ -28,12 +28,14 @@
 <div id="win10">
     <div class="desktop">
         <div id="win10-shortcuts" class="shortcuts-hidden">
+            {{foreach $menus as $v }}
             <div class="shortcut"
-                 onclick="Win10.openUrl('{{:url(\'index/Auth/index\')}}',
-                 '<img class=\'icon\' src=\'__INDEX-STATIC__/img/icon/quanxian.png\'/>权限管理')">
-                <img class="icon" src="__INDEX-STATIC__/img/icon/quanxian.png"/>
-                <div class="title">权限管理</div>
+                 onclick="Win10.openUrl('{{:url($v[\'name\'])}}',
+                 '<img class=\'icon\' src=\'uploads/{{$v[\'image\']}}\'/>{{$v[\'title\']}}')">
+                <img class="icon" src="uploads/{{$v['image']}}"/>
+                <div class="title">{{$v['title']}}</div>
             </div>
+            {{/foreach}}
             <!--<div class="shortcut" onclick="window.open('__INDEX-STATIC__/demo.html')">-->
             <!--<img class="icon" src="__INDEX-STATIC__/img/icon/demo.png"/>-->
             <!--<div class="title">查看DEMO</div>-->

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/heads" /}}
+
+    <title>添加用户组</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        请为 {{$groupInfo['title']}} 分配权限
+    </blockquote>
+    <form class="layui-form" id="form-auth-add">
+        {{:token()}}
+        <input type="hidden" name="id" value="{{$groupInfo['id']}}" />
+        <input type="hidden" name="title" value="{{$groupInfo['title']}}" />
+        <div class="layui-collapse" lay-accordion="">
+            {{foreach $reules as $value }}
+
+            {{php}}
+            in_array($value['id'],$userRules)?$checks='checked':$checks='';
+            {{/php}}
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">{{$value['title']}}</h2>
+                <div class="layui-colla-content ">
+                    <div class="layui-input-block">
+                        <input type="checkbox" value="{{$value['id']}}" name="reules[]" title="{{$value['title']}}" {{$checks}}>
+                        <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">
+                            <span>{{$value['title']}}</span><i class="layui-icon"></i>
+                        </div>
+                        {{foreach $value['son'] as $v }}
+                        {{php}}
+                                in_array($v['id'],$userRules)?$check='checked':$check='';
+                        {{/php}}
+                        <input type="checkbox" {{$check}} value="{{$v['id']}}" name="reules[]" title="{{$v['title']}}"><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin=""><span>{{$v['title']}}</span><i class="layui-icon"></i></div>
+                        {{/foreach}}
+                    </div>
+                </div>
+            </div>
+            {{/foreach}}
+        </div>
+
+
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+
+        </fieldset>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <!-- 示例-970 -->
+
+</div>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+
+            var form = new FormData(document.getElementById("form-auth-add"));
+            $.ajax({
+                url:"{{:url('index/UserGroup/allotAuthDo')}}",
+                async:false,
+                contentType:false,
+                processData:false,
+                data:form,
+                dataType:"json",
+                type:"POST",
+                success: function (data) {
+                    if(data.code===2000)
+                    {
+                        layer.alert('权限分配成功',{icon:6},function(){
+                            window.location.reload();
+                        });
+                    }else
+                    {
+                        layer.msg(data.msg,{icon:5});
+                    }
+                },
+                error:function() {
+
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+    $('#test1').click(function(){
+        $('input[name=image]').click();
+    });
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+
+        //监听折叠
+        element.on('collapse(test)', function(data){
+            layer.msg('展开状态：'+ data.show);
+        });
+    });
+</script>
+
+</body>
+</html>

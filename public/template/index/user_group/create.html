@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/heads" /}}
+
+    <title>添加用户组</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        添加用户组
+    </blockquote>
+    <form class="layui-form" id="form-auth-add">
+        <div class="layui-form-item">
+            {{:token()}}
+            <label class="layui-form-label">用户组名</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="用户组名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="describes" lay-verify="title" autocomplete="off" placeholder="描述" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是" checked="">
+                <input type="radio" name="status" value="0" title="否">
+                <!--<input type="radio" name="menu" value="禁" title="禁用" disabled="">-->
+            </div>
+        </div>
+
+
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 示例-970 -->
+
+</div>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            var title = $('input[name=title]').val();
+            if(title.length<=0)
+            {
+                layer.msg('用户组名不能为空！', {icon: 5});
+                return false;
+            }
+            var form = new FormData(document.getElementById("form-auth-add"));
+            $.ajax({
+                url:"{{:url('index/UserGroup/save')}}",
+                async:false,
+                contentType:false,
+                processData:false,
+                data:form,
+                dataType:"json",
+                type:"POST",
+                success: function (data) {
+                  if(data.code===2000)
+                  {
+                    layer.alert('添加成功',{icon:6},function(){
+                        window.location.reload();
+                    });
+                  }else
+                  {
+                      layer.msg(data.msg,{icon:5});
+                  }
+                },
+                error:function() {
+
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+    $('#test1').click(function(){
+        $('input[name=image]').click();
+    });
+
+</script>
+
+</body>
+</html>
