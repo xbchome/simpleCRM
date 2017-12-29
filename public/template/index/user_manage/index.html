@@ -7,26 +7,28 @@
 </head>
 <body>
 <div class="content-body">
-    <div>
-        <button class="layui-btn layui-btn-lg layui-btn-normal"  onclick="Win10.openUrl('{{:url(\'index/UserManage/create\')}}',
+
+    <div class="table-content">
+        <div>
+            <button class="layui-btn layui-btn-lg layui-btn-normal"  onclick="Win10.openUrl('{{:url(\'index/UserManage/create\')}}',
                  '<img class=\'icon\' src=\'__INDEX-STATIC__/img/icon/quanxian.png\'/>创建用户')">创建用户</button>
-    </div>
-    <div class="">
-        <table class="layui-table" lay-data="{width: 950, height:1200, url:'{{:url(\'index/UserManage/lists\')}}', page:true, id:'idTest'}" lay-filter="demo">
+        </div>
+        <table class="layui-table" lay-data="{width: 1090, height:580, url:'{{:url(\'index/UserManage/index\')}}', page:true, id:'idTest'}" lay-filter="demo">
             <thead>
             <tr>
                 <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
                 <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
-                <th lay-data="{field:'username', width:80}">用户名</th>
+                <th lay-data="{field:'log_name', width:100}">用户名</th>
+                <th lay-data="{field:'user_name', width:100}">用户姓名</th>
                 <th lay-data="{field:'sex', width:80, sort: true}">性别</th>
-                <th lay-data="{field:'city', width:80}">城市</th>
-                <th lay-data="{field:'sign', width:160}">签名</th>
-                <th lay-data="{field:'experience', width:80, sort: true}">积分</th>
+                <th lay-data="{field:'phone', width:120}">电话</th>
+                <th lay-data="{field:'email', width:190}">邮箱</th>
+                <th lay-data="{field:'position_cn', width:80}">职位</th>
 
-                <th lay-data="{field:'classify', width:80}">职业</th>
-                <th lay-data="{field:'wealth', width:135, sort: true}">财富</th>
-                <th lay-data="{field:'score', width:80, sort: true, fixed: 'right'}">评分</th>
-                <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+
+                <th lay-data="{field:'create_time', width:135, sort: true}">创建时间</th>
+
+                <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}">操作</th>
             </tr>
             </thead>
         </table>

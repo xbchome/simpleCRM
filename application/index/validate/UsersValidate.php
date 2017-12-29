@@ -13,13 +13,16 @@ use think\Validate;
 
 class UsersValidate extends Validate
 {
+    protected $regex = [
+        'phone' => '/0?(13|14|15|17|18|19)[0-9]{9}/',
+    ];
     protected $rule = [
         'log_name|用户名'      => 'require|unique:users',
         'user_name|用户姓名'   => 'require',
         'log_password|密码'    => 'require|min:6',
         'email'                => 'require|email|unique:users',
-        'phone|手机号'         => 'require|regex:0?(13|14|15|17|18|19)[0-9]{9}|unique:users',
-        'position'             => 'require'
+        'phone|手机号'         => 'regex:phone|unique:users',
+        'position|部门'         => 'require'
     ];
 
     protected $scene = [

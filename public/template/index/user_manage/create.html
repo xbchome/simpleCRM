@@ -17,13 +17,13 @@
             <div class="layui-inline">
                 <label class="layui-form-label">用户名</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="phone" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="tel" name="log_name" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-inline">
-                    <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    <input type="password" name="log_password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
             </div>
@@ -34,14 +34,14 @@
             <div class="layui-inline">
                 <label class="layui-form-label">真实姓名</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="phone" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="tel" name="user_name" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="男" title="男" checked="">
-                <input type="radio" name="sex" value="女" title="女">
+                <input type="radio" name="sex" value="1" title="男" checked="">
+                <input type="radio" name="sex" value="2" title="女">
             </div>
             </div>
         </div>
@@ -64,8 +64,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">部门职位</label>
             <div class="layui-input-block">
-                <select name="pid" lay-filter="aihao">
-                    <option value="0">请选择部门</option>
+                <select name="position" lay-filter="aihao">
+                    <option value="">请选择部门</option>
                     {{foreach $data as $vo }}
                     <option value="{{$vo['id']}}">{{$vo['title']}}</option>
                     {{/foreach}}
@@ -137,7 +137,6 @@
 //                layer.msg('架构名不能为空！', {icon: 5});
 //                return false;
 //            }
-            alert(0);
             var form = new FormData(document.getElementById("form-auth-add"));
             $.ajax({
                 url:"{{:url('index/UserManage/save')}}",

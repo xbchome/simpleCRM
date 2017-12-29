@@ -15,7 +15,9 @@ Route::get([
     'edit-userGroup'    => 'index/UserGroup/edit',
     'show-framework'    => 'index/Framework/index',    // 显示组织架构
     'create-framework'  => 'index/Framework/create',    // 显示组织架构添加页面
-    'edit-framework'    => 'index/Framework/edit'
+    'edit-framework'    => 'index/Framework/edit',
+    'show-users'        => 'index/UserManage/index',
+    'create-users'      => 'index/UserManage/create'
 ]);
 
 Route::post([
@@ -25,4 +27,5 @@ Route::post([
     'save-frameword'    => 'index/Framework/save',
     'update-frameword'  => 'index/Framework/update',  // 组织架构修改提交
     'del-frameword'     => 'index/Framework/delete',  // 删除组织架构
+    'save-users'        => 'index/UserManage/save',
 ]);

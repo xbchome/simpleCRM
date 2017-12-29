@@ -6,3 +6,8 @@
 body{
     overflow: visible;
 }
+
+.table-content{
+    margin: 0px auto;
+    width: 1090px;
+}
