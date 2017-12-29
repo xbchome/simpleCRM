@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/heads" /}}
+
+    <title>添加组织架构</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        添加组织架构
+    </blockquote>
+    <form class="layui-form" id="form-auth-add">
+        {{:token()}}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">真实姓名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男" checked="">
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="email" lay-verify="required|email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">部门职位</label>
+            <div class="layui-input-block">
+                <select name="pid" lay-filter="aihao">
+                    <option value="0">请选择部门</option>
+                    {{foreach $data as $vo }}
+                    <option value="{{$vo['id']}}">{{$vo['title']}}</option>
+                    {{/foreach}}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限</label>
+            <div class="layui-input-block">
+                {{foreach $group as $v }}
+                <input type="checkbox" value="{{$v['id']}}" name="group[]" title="{{$v['title']}}">
+                {{/foreach}}
+            </div>
+        </div>
+
+
+
+        <br/>
+
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 示例-970 -->
+
+</div>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+
+
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        // 自定义规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+        //监听提交
+        form.on('submit(demo1)', function(data){
+//            var title = $('input[name=title]').val();
+//            if(title.length<=0)
+//            {
+//                layer.msg('架构名不能为空！', {icon: 5});
+//                return false;
+//            }
+            alert(0);
+            var form = new FormData(document.getElementById("form-auth-add"));
+            $.ajax({
+                url:"{{:url('index/UserManage/save')}}",
+                async:false,
+                contentType:false,
+                processData:false,
+                data:form,
+                dataType:"json",
+                type:"POST",
+                success: function (data) {
+                    if(data.code===2000)
+                    {
+                        layer.alert('添加成功',{icon:6},function(){
+                            window.location.reload();
+                        });
+                    }else
+                    {
+                        layer.msg(data.msg,{icon:5});
+                    }
+                },
+                error:function() {
+
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+    $('#test1').click(function(){
+        $('input[name=image]').click();
+    });
+
+</script>
+
+</body>
+</html>
