@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     {{include file="public/heads" /}}
 
-    <title>添加员工</title>
+    <title>修改员工信息</title>
 </head>
 <body>
 <div class="content-body" >
     <blockquote class="layui-elem-quote layui-text">
-        添加员工
+        修改员工信息
     </blockquote>
     <form class="layui-form" id="form-auth-add">
         {{:token()}}
@@ -17,7 +17,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">用户名</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="log_name" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="tel" name="log_name" value="{{$users['log_name']}}" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -34,14 +34,19 @@
             <div class="layui-inline">
                 <label class="layui-form-label">真实姓名</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="user_name" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="tel" value="{{$users['user_name']}}" name="user_name" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
             <label class="layui-form-label">性别</label>
+                {{php}}
+                    $sex[$users['sex']] = "checked";
+                    $select[$users['position']] = "selected";
+                    //$auth[''] =
+                {{/php}}
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" checked="">
-                <input type="radio" name="sex" value="2" title="女">
+                <input type="radio" name="sex" value="1" title="男" {{php}} echo @$sex[1];{{/php}} >
+                <input type="radio" name="sex" value="2" title="女" {{php}} echo @$sex[2];{{/php}}>
             </div>
             </div>
         </div>
@@ -50,13 +55,13 @@
             <div class="layui-inline">
                 <label class="layui-form-label">手机</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                    <input type="tel" value="{{$users['phone']}}" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">邮箱</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="email" lay-verify="required|email" autocomplete="off" class="layui-input">
+                    <input type="tel" value="{{$users['email']}}" name="email" lay-verify="required|email" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -67,7 +72,7 @@
                 <select name="position" lay-filter="aihao">
                     <option value="">请选择部门</option>
                     {{foreach $data as $vo }}
-                    <option value="{{$vo['id']}}">{{$vo['title']}}</option>
+                    <option value="{{$vo['id']}}" {{php}}echo @$select[$vo['id']]; {{/php}}>{{$vo['title']}}</option>
                     {{/foreach}}
                 </select>
             </div>
@@ -77,7 +82,7 @@
             <label class="layui-form-label">权限</label>
             <div class="layui-input-block">
                 {{foreach $group as $v }}
-                <input type="checkbox" value="{{$v['id']}}" name="group[]" title="{{$v['title']}}">
+                <input type="checkbox" value="{{$v['id']}}" {{php}} echo @$groupChecked[$v['id']]; {{/php}} name="group[]" title="{{$v['title']}}">
                 {{/foreach}}
             </div>
         </div>

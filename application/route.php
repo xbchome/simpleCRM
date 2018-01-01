@@ -11,13 +11,15 @@
 
 use think\Route;
 Route::get([
+    '/'                 => 'index/Index/index',
     'create-user-group' => 'index/UserGroup/create',
     'edit-userGroup'    => 'index/UserGroup/edit',
     'show-framework'    => 'index/Framework/index',    // 显示组织架构
     'create-framework'  => 'index/Framework/create',    // 显示组织架构添加页面
     'edit-framework'    => 'index/Framework/edit',
     'show-users'        => 'index/UserManage/index',
-    'create-users'      => 'index/UserManage/create'
+    'create-users'      => 'index/UserManage/create',
+    'login'             => 'index/Login/index'
 ]);
 
 Route::post([
@@ -28,4 +30,5 @@ Route::post([
     'update-frameword'  => 'index/Framework/update',  // 组织架构修改提交
     'del-frameword'     => 'index/Framework/delete',  // 删除组织架构
     'save-users'        => 'index/UserManage/save',
+    'doLogin'           => 'index/Login/doLogin',       // 登陆提交
 ]);

@@ -5,14 +5,14 @@ namespace app\index\controller;
 use app\index\model\AuthGroup;
 use app\index\model\AuthGroupAccess;
 use app\index\model\Users;
-use think\Controller;
+//use think\Controller;
 use think\Db;
 use think\Exception;
 use think\Request;
 use app\index\Model\Framework as FrameworkModel;
 use my\RecursionType;
 
-class UserManage extends Controller
+class UserManage extends Common
 {
     /**
      * 显示资源列表
@@ -21,37 +21,6 @@ class UserManage extends Controller
      */
     public function index()
     {
-        $data = [
-            'msg'   =>"",
-            'code'  =>0,
-            'data'  => [
-                [
-                    'id' =>1,
-                    'username'  => 'xbc',
-                    'sex'   => 'nang',
-                    "city"=>"城市-0",
-                    "sign"=>"签名-0",
-                    "experience"=>255,
-                    "logins"=>24,
-                    "wealth"=>82830700,
-                    "classify"=>"作家",
-                    "score"=>57
-                ],
-                [
-                    'id' =>2,
-                    'username'  => 'xbc',
-                    'sex'   => 'nang',
-                    "city"=>"城市-0",
-                    "sign"=>"签名-0",
-                    "experience"=>255,
-                    "logins"=>24,
-                    "wealth"=>82830700,
-                    "classify"=>"作家",
-                    "score"=>57
-                ]
-            ],
-            'count' => 1
-        ];
 
 
         if(request()->isAjax())
@@ -170,7 +139,30 @@ class UserManage extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $users = Users::get($id);
+        if(empty($users))
+            die("用户不存在");
+        if($users['is_super']===10 && $this->userInfo['is_super']!==10)
+            die("你无法修改超级管理员信息");
+        $uGroup = AuthGroupAccess::where('uid','=',$id)->select();
+        foreach($uGroup as $v)
+        {
+           $groupChecked[$v['group_id']] = 'checked';
+        }
+        // 查找组织架构
+        $data = FrameworkModel::all();
+        $data = RecursionType::getFrameworks($data);  // 递归组织框架
+        $group = AuthGroup::all();  // 查找所有的
+
+        return view('',[
+            'data'  => $data,
+            'group' => $group,
+            'users' => $users,
+            'groupChecked' =>$groupChecked,
+        ]);
+
+        return view();
     }
 
     /**

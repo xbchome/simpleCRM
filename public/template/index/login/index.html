@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="__INDEX-STATIC__/login/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="__INDEX-STATIC__/login/css/demo.css" />
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="__INDEX-STATIC__/login/css/component.css" />
+    <!--[if IE]>
+    <script src="__INDEX-STATIC__/login/js/html5.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .password{
+            width: 120px;
+        }
+        .log-img{
+            height: 43px;
+            width: 140px;
+            float:right;
+            margin-right:15px ;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container demo-1">
+    <div class="content">
+        <div id="large-header" class="large-header">
+            <canvas id="demo-canvas"></canvas>
+            <div class="logo_box">
+                <h3>欢迎你</h3>
+                <form  id="my_form" method="post">
+                    {{:token()}}
+                    <div class="input_outer">
+                        <span class="u_user"></span>
+                        <input name="logname" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
+                    </div>
+                    <div class="input_outer">
+                        <span class="us_uer"></span>
+                        <input name="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="请输入密码">
+                    </div>
+
+                    {{if condition="$Think.session.loginError >=4"}}
+                    <div class="input_outer">
+                        <span class="us_uer"></span>
+                        <input name="code" class="text password" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="text" placeholder="请输入验证码">
+                        <img src="{{:captcha_src()}}" class="log-img" onclick="this.src='{{:captcha_src()}}?k='+Math.random()" />
+                    </div>
+                    {{/if}}
+                    <div class="mb2"><a class="act-but submit" onclick="login()" href="javascript:;" style="color: #FFFFFF">登录</a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- /container -->
+<script type="text/javascript" src="__INDEX-STATIC__/js/jquery-2.2.4.min.js"></script>
+
+<script type="text/javascript" src="__INDEX-STATIC__/component/layer-v3.0.3/layer/layer.js"></script>
+<script src="__INDEX-STATIC__/login/js/TweenLite.min.js"></script>
+<script src="__INDEX-STATIC__/login/js/EasePack.min.js"></script>
+<script src="__INDEX-STATIC__/login/js/rAF.js"></script>
+<script src="__INDEX-STATIC__/login/js/demo-1.js"></script>
+
+<script>
+  document.onkeydown = function (ev) {
+      var e = event || window.event || arguments.callee.caller.arguments[0];
+      if(e && e.keyCode==13){ // enter
+         login();
+      }
+  }
+    function login()
+    {
+        console.log( "{{$Think.session.loginError}}");
+       var name = $("input[name=logname]").val();
+       var pass = $("input[name=logpass]").val();
+       if(name.length<=0)
+       {
+           layer.msg('用户名不能为空！',{icon:5});
+           return false;
+       }
+       if(pass.length<=0)
+       {
+            layer.msg('密码不能为空！',{icon:5});
+            return false;
+       }
+       $.ajax({
+           url:"{{:url('index/Login/doLogin')}}",
+           data:$("#my_form").serialize(),
+           dataType:"json",
+           type:"POST",
+           success: function (data) {
+               if(data.code===2000)
+                   window.location.href="{{:url('index/Index/index')}}";
+               else
+               {
+                   if(data.code===-2)
+                           window.location.reload();
+                    layer.msg(data.msg,{icon:5});
+               }
+           },
+           error:function() {
+
+           }
+       });
+
+    }
+</script>
+</body>
+</html>

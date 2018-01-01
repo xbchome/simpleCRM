@@ -9,7 +9,7 @@ use think\Log;
 use think\Request;
 use app\index\model\Framework as FrameworkModel;
 
-class Framework extends Controller
+class Framework extends Common
 {
     /**
      * 显示资源列表
