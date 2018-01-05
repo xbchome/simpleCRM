@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/_head_index" /}}
+    <title>Title</title>
+</head>
+<body>
+<div class="content-body">
+
+    <div class="table-content">
+        <blockquote class="layui-elem-quote layui-text">
+            客户管理
+        </blockquote>
+        <div style="margin-bottom: 10px;">
+            {{if condition="in_array('index/customermanage/create',$glp_menu)==true"}}
+            <button class="layui-btn layui-btn-lg layui-btn-normal"  onclick="Win10.openUrl('{{:url(\'index/CustomerManage/create\')}}',
+              '新增客户')">新增客户</button>
+            {{/if}}
+        </div>
+        <div class="demoTable" style="float: left;">
+            {{if condition="in_array('index/customermanage/shift',$glp_menu)==true"}}
+            <button class="layui-btn" data-type="getCheckData">客户转移</button>
+            <select name="user" lay-filter="aihao" class="layui-input" style="width:200px; height:40px;float: left; margin-right:10px;  ">
+                <option value="">请选择员工</option>
+                {{foreach $users as $v }}
+                <option value="{{$v['id']}}">{{$v['user_name']}}</option>
+                {{/foreach}}
+            </select>
+            {{/if}}
+        </div>
+        <!-- 搜索 -->
+        <div class="demoTable" style="float: right;margin-bottom: 10px;"  >
+            {{if condition="in_array('index/customermanage/shift',$glp_menu)==true"}}
+            <button class="layui-btn" onclick="searchKh()" >搜索</button>
+            <select name="searchKh" lay-filter="aihao" class="layui-input" style="width:200px; height:40px;float: left; margin-right:10px;  ">
+                <option value="">请选择员工</option>
+                {{foreach $users as $v }}
+                <option value="{{$v['id']}}">{{$v['user_name']}}</option>
+                {{/foreach}}
+            </select>
+            {{/if}}
+        </div>
+
+        <table class="layui-table" lay-data="{width: 1090, height:560, url:'{{:url(\'index/CustomerManage/index\')}}', page:true, id:'idTest'}" lay-filter="demo">
+            <thead>
+            <tr>
+                <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'cm_name', width:100}">客户姓名</th>
+                <th lay-data="{field:'user_name', width:100}">跟单员</th>
+                <th lay-data="{field:'cm_sex', width:80, sort: true}">性别</th>
+                <th lay-data="{field:'cm_phone', width:130}">电话</th>
+                <th lay-data="{field:'cm_type', width:190}">客户类型</th>
+                <th lay-data="{field:'company', width:120}">公司</th>
+                <th lay-data="{field:'industry', width:100}">行业</th>
+
+                <th lay-data="{field:'create_time', width:135, sort: true}">创建时间</th>
+
+                <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+            </thead>
+        </table>
+        <script type="text/html" id="barDemo">
+            {{if condition="in_array('index/customermanage/read',$glp_menu)==true"}}
+            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+            {{/if}}
+            {{if condition="in_array('index/customermanage/edit',$glp_menu)==true"}}
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            {{/if}}
+            {{if condition="in_array('index/customermanage/delete',$glp_menu)==true"}}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            {{/if}}
+        </script>
+    </div>
+
+</div>
+<script>
+    var table;
+    layui.use('table', function(){
+         table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function(obj){
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                Win10.openUrl("{{:url('index/CustomerManage/read')}}?id="+data.id,'查看客户');
+            } else if(obj.event === 'del'){
+                layer.confirm('确认要删除么', function(index){
+                    var data = obj.data;
+                    layer.close(index);
+                    $.ajax({
+                        url:"{{:url('index/CustomerManage/delete')}}",
+                        dataType:"json",
+                        data:{id:data.id},
+                        type:"delete",
+                        success: function (data) {
+                            if(data.code==2000)
+                            {
+                                obj.del();
+                                layer.alert('删除成功！');
+                            }else
+                            {
+                                layer.alert(data.msg);
+                            }
+                        },
+                        error: function () {
+                        }
+                    });
+                });
+            } else if(obj.event === 'edit'){
+                // layer.alert('编辑行：<br>'+ JSON.stringify(data))
+                Win10.openUrl("{{:url('index/CustomerManage/edit')}}?id="+data.id,'编辑客户');
+            }
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                if(data.length<=0)
+                {
+                    layer.alert('请选择要转移的客户');
+                    return false;
+                }
+               var id = $('select[name=user]').val();
+                if(id==0 || id ==undefined)
+                {
+                    layer.alert('请选择要转移到的员工');
+                    return false;
+                }
+                var cid =Array();
+                for(var i=0;data.length>i;i++)
+                {
+                    cid[i] = data[i]['id'];
+                }
+                layer.confirm('请确认操作！',function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        url:"{{:url('index/CustomerManage/shift')}}",
+                        dataType:"json",
+                        type:"post",
+                        data:{uid:id,data:cid},
+                        success: function (data) {
+                            if(data.code===2000)
+                            {
+                                table.reload('idTest', {
+                                    url:"{{:url('index/CustomerManage/index')}}"
+                                    ,where: {} //设定异步数据接口的额外参数
+                                    //,height: 300
+                                });
+                            }else
+                            {
+                                layer.msg(data.msg);
+                            }
+                        },
+                        error: function () {
+                        }
+                    });
+                });
+
+            }
+            ,getCheckLength: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    ,data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('idTest');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    // 删除用户组
+    function deletes(id)
+    {
+        layer.confirm('请确认操作',{but:['确定','取消']},function () {
+            $.ajax({
+                url:"{{:url('index/UserManage/delete')}}",
+                data:{id:id},
+                dataType:"json",
+                type:"POST",
+                success:function (data) {
+                    if(data.code===2000)
+                    {
+                        layer.alert('删除成功！',function (){
+                            window.location.reload();
+                        });
+                    }else
+                    {
+                        layer.msg(data.msg,{icon:5});
+                    }
+                }
+            });
+        });
+    }
+
+  function searchKh() {
+        var uid = $('select[name=searchKh]').val();
+      table.reload('idTest', {
+          url:"{{:url('index/CustomerManage/index')}}"
+          ,where: {
+              'uid':uid,
+          } //设定异步数据接口的额外参数
+          //,height: 300
+      });
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/heads" /}}
+
+    <title>添加客户</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        添加客户
+    </blockquote>
+    <form class="layui-form" id="form-auth-add">
+        {{:token()}}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">客户姓名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_name']}}" disabled name="cm_name" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户行业</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled value="{{$data['industry']}}" name="industry"  placeholder="客户行业" autocomplete="off" class="layui-input">
+                </div>
+                <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">公司名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" disabled name="company" value="{{$data['company']}}"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                    {{php}} $sex =['女','男']; {{/php}}
+                <div class="layui-input-block">
+                   <input type="text" autocomplete="off" disabled class="layui-input layui-disabled" value="{{$sex[$data['cm_sex']]}}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_phone']}}" disabled name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input ">
+                </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_type']}}" disabled name="type"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+
+                <label class="layui-form-label">客户需求</label>
+                <div class="layui-input-block">
+                    <input type="tel" name="demand" disabled value="{{$data['demand']}}" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
+
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" disabled name="describes" class="layui-textarea">{{$data['describes']}}</textarea>
+            </div>
+        </div>
+
+        <br/>
+
+
+    </form>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>产品方案</legend>
+    </fieldset>
+
+    {{foreach $data['schemes'] as $key=>$value }}
+
+    <div class="layui-form-item my_plan"  id="my_plan">
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" disabled value="{{$value['scheme']}}" name="scheme[]"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    </div>
+
+    {{/foreach}}
+
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>跟进情况</legend>
+    </fieldset>
+
+    {{foreach $data['follows'] as $key=>$value }}
+
+    <div class="layui-form-item my_follow"  >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" disabled name="follow[]"  value="{{$value['contents']}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    {{/foreach}}
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>上门时间</legend>
+    </fieldset>
+
+    {{foreach $data['visitss'] as $key=>$value }}
+    <div class="layui-form-item my_visits" id="my_visits" >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="text" name="visits[]"  disabled value="{{$value['visits_time']}}" class="layui-input" id="test5" placeholder="" lay-key="6">
+            </div>
+        </div>
+    </div>
+    {{/foreach}}
+</div>
+<div style="height: 350px;"></div>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+</body>
+</html>

@@ -71,6 +71,7 @@ use think\Db;
  */
 
 class Auth {
+    public $menu = [];
     //默认配置
     protected $config = array(
         'auth_on'           => true,                      // 认证开关
@@ -99,6 +100,7 @@ class Auth {
             return true;
         }
         $authList = $this->getAuthList($uid, $type); //获取用户需要验证的所有有效规则列表
+        $this->menu = $authList;
         if (is_string($name)) {
             $name = strtolower($name);  // 将字符串转换为小写
             $name = strpos($name, ',') !== false ? explode(',', $name) : [$name];
@@ -206,4 +208,8 @@ class Auth {
         }
         return $userinfo[$uid];
     }
+
+    /**
+     * 获取首页菜单
+     */
 }

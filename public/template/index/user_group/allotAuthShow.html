@@ -23,10 +23,10 @@
             {{/php}}
             <div class="layui-colla-item">
                 <h2 class="layui-colla-title">{{$value['title']}}</h2>
-                <div class="layui-colla-content ">
+                <div class="layui-colla-content layui-show">
                     <div class="layui-input-block">
                         <input type="checkbox" value="{{$value['id']}}" name="reules[]" title="{{$value['title']}}" {{$checks}}>
-                        <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">
+                        <div class="layui-unselect layui-form-checkbox layui-form-checked " lay-skin="">
                             <span>{{$value['title']}}</span><i class="layui-icon"></i>
                         </div>
                         {{foreach $value['son'] as $v }}

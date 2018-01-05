@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{include file="public/heads" /}}
+
+    <title>添加客户</title>
+</head>
+<body>
+<div class="content-body" >
+    <blockquote class="layui-elem-quote layui-text">
+        添加客户
+    </blockquote>
+    <form class="layui-form" id="form-auth-add">
+        {{:token()}}
+        <input type="hidden" value="{{$data['id']}}" name="id" />
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">客户姓名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_name']}}" name="cm_name" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户行业</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{{$data['industry']}}" name="industry"  placeholder="客户行业" autocomplete="off" class="layui-input">
+                </div>
+                <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">公司名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="company" value="{{$data['company']}}"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                    {{php}} $sex [$data['cm_sex']]='checked'; {{/php}}
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="1" title="男" {{php}} echo @$sex[1] {{/php}}>
+                    <input type="radio" name="sex" value="0" title="女" {{php}} echo @$sex[0] {{/php}}>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_phone']}}" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_type']}}" name="type"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+
+                <label class="layui-form-label">客户需求</label>
+                <div class="layui-input-block">
+                    <input type="tel" name="demand" value="{{$data['demand']}}" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+
+
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="describes" class="layui-textarea">{{$data['describes']}}</textarea>
+            </div>
+        </div>
+
+        <br/>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>产品方案</legend>
+    </fieldset>
+
+    {{foreach $data['schemes'] as $key=>$value }}
+
+    {{if condition="$key==0" }}
+    <div class="layui-form-item my_plan" sss="dddd" id="my_plan">
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" value="{{$value['scheme']}}" name="scheme[]"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return addPlan()">新增</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveScheme(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{else/}}
+    <div class="layui-form-item my_plan" >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="scheme[]"  value="{{$value['scheme']}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return delPlan(this)">删除</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveScheme(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{/foreach}}
+
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>跟进情况</legend>
+    </fieldset>
+
+    {{foreach $data['follows'] as $key=>$value }}
+
+    {{if condition="$key==0" }}
+    <div class="layui-form-item my_follow" id="my_follow" >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" value="{{$value['contents']}}" name="follow[]"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return addFollow()">新增</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveFollow(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{else/}}
+    <div class="layui-form-item my_follow"  >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="follow[]"  value="{{$value['contents']}}"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return delFollow(this)">删除</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveFollow(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{/foreach}}
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>上门时间</legend>
+    </fieldset>
+
+    {{foreach $data['visitss'] as $key=>$value }}
+
+    {{if condition="$key==0" }}
+    <div class="layui-form-item my_visits" id="my_visits" >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="text" name="visits[]" value="{{$value['visits_time']}}" class="layui-input" id="test5" placeholder="" lay-key="6">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return addVisit()">新增</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveVisit(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{else/}}
+    <div class="layui-form-item my_visits"  >
+        <div class="layui-inline">
+            <label class="layui-form-label"> {{$key+1}}</label>
+            <div class="layui-input-inline">
+                <input type="text" name="visits[]" value="{{$value['visits_time']}}" class="layui-input" id="test5" placeholder="" lay-key="6">
+            </div>
+        </div>
+        <div class="layui-inline" data-cid="id">
+            <div class="layui-input-block">
+                <button class="layui-btn  layui-btn-normal" onclick="return delVisit(this)">删除</button>
+                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveVisit(this)">保存</button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{/foreach}}
+</div>
+<div style="height: 350px;"></div>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+
+
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        //时间选择器
+        laydate.render({
+            elem: '#test5'
+            ,type: 'datetime'
+        });
+
+
+        //创建一个编辑器
+
+
+        // 自定义规则
+//        form.verify({
+//            title: function(value){
+//                if(value.length < 5){
+//                    return '标题至少得5个字符啊';
+//                }
+//            }
+//        });
+        //监听提交
+        form.on('submit(demo1)', function(data){
+
+            var form = new FormData(document.getElementById("form-auth-add"));
+            $.ajax({
+                url:"{{:url('index/CustomerManage/update')}}",
+                async:false,
+                contentType:false,
+                processData:false,
+                data:form,
+                dataType:"json",
+                type:"POST",
+                success: function (data) {
+                    if(data.code===2000)
+                    {
+                        layer.alert('修改成功',{icon:6},function(){
+                            window.location.reload();
+                        });
+                    }else
+                    {
+                        layer.msg(data.msg,{icon:5});
+                    }
+                },
+                error:function() {
+
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+
+
+
+</script>
+{{include file="public/_crmJs"/}}
+</body>
+</html>

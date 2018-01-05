@@ -19,11 +19,12 @@ Route::get([
     'edit-framework'    => 'index/Framework/edit',
     'show-users'        => 'index/UserManage/index',
     'create-users'      => 'index/UserManage/create',
-    'login'             => 'index/Login/index'
+    'login'             => 'index/Login/index',       // 登录页面
+    'show-userinfo'     => 'index/UserManage/read',       // 用户详情
 ]);
 
 Route::post([
-    'save-userGroup' => 'index/UserGroup/save',
+    'save-userGroup'    => 'index/UserGroup/save',
     'update-userGroup'  => 'index/UserGroup/update',
     'del-userGroup'     => 'index/UserGroup/delete',
     'save-frameword'    => 'index/Framework/save',
@@ -31,4 +32,10 @@ Route::post([
     'del-frameword'     => 'index/Framework/delete',  // 删除组织架构
     'save-users'        => 'index/UserManage/save',
     'doLogin'           => 'index/Login/doLogin',       // 登陆提交
+    'update-user'       => 'index/Login/update',      // 修改用户信息提交
+]);
+
+Route::delete([
+    'del-customer'   => 'index/CustomerManage/delete',  // 删除
+    'del-user'       => 'index/UserManage/delete',   // 删除用户
 ]);

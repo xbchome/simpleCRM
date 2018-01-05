@@ -7,11 +7,14 @@
 </head>
 <body>
 <div class="content-body">
+    <blockquote class="layui-elem-quote layui-text">
+       组织架构
+    </blockquote>
     <div>
+        {{if condition="in_array('index/framework/create',$glp_menu)==true"}}
         <button class="layui-btn layui-btn-lg layui-btn-normal"  onclick="Win10.openUrl('{{:url(\'index/Framework/create\')}}',
-                 '<img class=\'icon\' src=\'__INDEX-STATIC__/img/icon/quanxian.png\'/>添加组织架构')">添加组织架构</button>
-        <!--<button class="layui-btn layui-btn-lg layui-btn-normal"  onclick="Win10.openUrl('{{:url(\'index/UserGroup/create\')}}',-->
-                 <!--'增加用户组')">增加用户组</button>-->
+                 '添加组织架构')">添加组织架构</button>
+        {{/if}}
     </div>
     <div class="">
         <table class="layui-table">
@@ -36,10 +39,13 @@
                 <td>{{$value['title']}}</td>
                 <td>{{$value['describes']}}</td>
                 <td>
+                    {{if condition="in_array('index/framework/edit',$glp_menu)==true"}}
                     <button class="layui-btn" title="编辑" onclick="Win10.openUrl('{{:url(\'index/Framework/edit\',[\'id\'=>$value[\'id\']])}}',
                  '编辑组织架构')"><i class="layui-icon"></i></button>
-
+                    {{/if}}
+                    {{if condition="in_array('index/framework/delete',$glp_menu)==true"}}
                     <button class="layui-btn layui-btn-danger" onclick="deletes({{$value['id']}})" title="删除"><i class="layui-icon"></i></button>
+                    {{/if}}
                 </td>
             </tr>
             {{/foreach}}

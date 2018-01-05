@@ -28,13 +28,19 @@
 <div id="win10">
     <div class="desktop">
         <div id="win10-shortcuts" class="shortcuts-hidden">
+
             {{foreach $menus as $v }}
+                {{php}}
+                    if(in_array(strtolower($v['name']),$glp_menu))
+                    {
+                {{/php}}
             <div class="shortcut"
                  onclick="Win10.openUrl('{{:url($v[\'name\'])}}',
                  '<img class=\'icon\' src=\'uploads/{{$v[\'image\']}}\'/>{{$v[\'title\']}}')">
                 <img class="icon" src="uploads/{{$v['image']}}"/>
                 <div class="title">{{$v['title']}}</div>
             </div>
+            {{php}} } {{/php}}
             {{/foreach}}
             <!--<div class="shortcut" onclick="window.open('__INDEX-STATIC__/demo.html')">-->
             <!--<img class="icon" src="__INDEX-STATIC__/img/icon/demo.png"/>-->
@@ -45,6 +51,10 @@
     </div>
     <div id="win10-menu" class="hidden">
         <div class="list win10-menu-hidden animated animated-slideOutLeft">
+            <div class="item"
+                 onclick="Win10.exit()">
+                <i class="black icon fa fa-power-off fa-fw"></i><span class="title">关闭</span>
+            </div>
             <div class="item"
                  onclick="Win10.exit()">
                 <i class="black icon fa fa-power-off fa-fw"></i><span class="title">关闭</span>

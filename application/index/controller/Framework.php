@@ -58,6 +58,17 @@ class Framework extends Common
         if(!$validate->scene('add')->check($data))
             return myJson(-1,$validate->getError());
         $data['create_time'] = time();
+        if($data['pid']==0)
+        {
+            $data['paht'] = ',0,';
+        }else
+        {
+            $pf = FrameworkModel::get($data['pid']);
+            if(empty($pf))
+                return myJson(-1,'上级可能被删除');
+            $data['paht'] = $pf['paht'].$data['pid'].',';
+        }
+
         unset($data['__token__']);
         try {
             FrameworkModel::create($data);
@@ -125,7 +136,16 @@ class Framework extends Common
         $validate = validate('FrameworkValidate');
         if(!$validate->scene('add')->check($data))
             return myJson(-1,$validate->getError());
-//        $data['create_time'] = time();
+        if($data['pid']==0)
+        {
+            $data['paht'] = ',0,';
+        }else
+        {
+            $pf = FrameworkModel::get($data['pid']);
+            if(empty($pf))
+                return myJson(-1,'上级可能被删除');
+            $data['paht'] = $pf['paht'].$data['pid'].',';
+        }
         unset($data['__token__']);
         try {
             FrameworkModel::where('id','=',$id)->update($data);

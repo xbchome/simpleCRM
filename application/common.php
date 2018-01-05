@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-
+use app\index\model\AuthRule;
 function myJson($code =2000,$msg='success',$data=[])
 {
     $data = [
@@ -19,4 +19,12 @@ function myJson($code =2000,$msg='success',$data=[])
         'data'=> $data,
     ];
     return json($data);
+}
+
+
+function is_menu($munes,$name)
+{
+    if(in_array($name,$munes))
+        return true;
+
 }

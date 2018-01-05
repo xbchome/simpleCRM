@@ -17,7 +17,7 @@ class UsersValidate extends Validate
         'phone' => '/0?(13|14|15|17|18|19)[0-9]{9}/',
     ];
     protected $rule = [
-        'log_name|用户名'      => 'require|unique:users',
+        'log_name|用户名'      => 'require|min:5|unique:users',
         'user_name|用户姓名'   => 'require',
         'log_password|密码'    => 'require|min:6',
         'email'                => 'require|email|unique:users',
@@ -26,6 +26,7 @@ class UsersValidate extends Validate
     ];
 
     protected $scene = [
-        'add'   => ['log_name','user_name','log_password','email','phone','position']
+        'add'       => ['log_name','user_name','log_password','email','phone','position'],
+        'update'    => ['log_name','user_name','email','phone','position']
     ];
 }

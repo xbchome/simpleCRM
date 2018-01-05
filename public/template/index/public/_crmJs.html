@@ -1,0 +1,248 @@
+<script>
+    function addPlan() {
+        var html = '<div class="layui-form-item my_plan" id="my_plan">\n' +
+            '            <div class="layui-inline">\n' +
+            '                <label class="layui-form-label"> 产品方案</label>\n' +
+            '                <div class="layui-input-inline">\n' +
+            '                    <input type="tel" name="scheme[]" lay-verify="required" autocomplete="off" class="layui-input">\n' +
+            '                </div>\n' +
+            '            </div>\n' +
+            '            <div class="layui-inline">\n' +
+            '                <div class="layui-input-block">\n' +
+            '                    <button class="layui-btn  layui-btn-normal" onclick="return delPlan(this)">删除</button>\n'+
+            '                    <button class="layui-btn  layui-btn-normal" onclick="return saveScheme(this)">保存</button>\n'+
+            '                </div>\n' +
+            '            </div>\n' +
+            '        </div>';
+        $("#my_plan").after(html);
+        return false;
+    }
+
+    function delPlan(obj) {
+
+        //$(obj).parent().parent().parent().remove();
+        var id = $(obj).siblings('button').attr('data-cid');
+        if(id===undefined)
+        {
+            $(obj).parent().parent().parent().remove();
+            return false;
+        }
+        $.ajax({
+            url:"{{:url('index/Api/delScheme')}}",
+            data:{id:id},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('删除成功',{icon:6});
+                    $(obj).parent().parent().parent().remove();
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+    }
+
+    /**
+     *
+     * @param obj
+     * @returns {boolean}
+     *  保存方案
+     */
+    function saveScheme(obj)
+    {
+        var objs = obj;
+        var scheme = $(obj).parents('.my_plan').find('.layui-input').val();
+        var cid = $('input[name=id]').val();
+        var id = $(obj).attr('data-cid');
+        if(id===undefined)
+            id = null;
+        $.ajax({
+            url:"{{:url('index/Api/seveScheme')}}",
+            data:{id:id,cid:cid,scheme:scheme},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('保存成功',{icon:6});
+                    $(objs).attr('data-cid',data.data.id);
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+
+    }
+
+
+    function addFollow() {
+        var html = '<div class="layui-form-item my_follow" id="my_follow">\n' +
+            '            <div class="layui-inline">\n' +
+            '                <label class="layui-form-label"> 跟进情况</label>\n' +
+            '                <div class="layui-input-inline">\n' +
+            '                    <input type="tel" name="follow[]" lay-verify="required" autocomplete="off" class="layui-input">\n' +
+            '                </div>\n' +
+            '            </div>\n' +
+            '            <div class="layui-inline">\n' +
+            '                <div class="layui-input-block">\n' +
+            '                    <button class="layui-btn  layui-btn-normal" onclick="return delFollow(this)">删除</button>\n'+
+            '                    <button class="layui-btn  layui-btn-normal" onclick="return saveFollow(this)">保存</button>\n'+
+            '                </div>\n' +
+            '            </div>\n' +
+            '        </div>';
+        $("#my_follow").after(html);
+        return false;
+    }
+
+    function delFollow(obj) {
+        var id = $(obj).siblings('button').attr('data-cid');
+        if(id===undefined)
+        {
+            $(obj).parent().parent().parent().remove();
+            return false;
+        }
+        $.ajax({
+            url:"{{:url('index/Api/delFollow')}}",
+            data:{id:id},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('删除成功',{icon:6});
+                    $(obj).parent().parent().parent().remove();
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+    }
+
+    function saveFollow(obj) {
+        var objs = obj;
+        var scheme = $(obj).parents('.my_follow').find('.layui-input').val();
+        var cid = $('input[name=id]').val();
+        var id = $(obj).attr('data-cid');
+        if(id===undefined)
+            id = null;
+        $.ajax({
+            url:"{{:url('index/Api/seveFollow')}}",
+            data:{id:id,cid:cid,scheme:scheme},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('保存成功',{icon:6});
+                    $(objs).attr('data-cid',data.data.id);
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+    }
+
+    function addVisit(obj) {
+        var html = '<div class="layui-form-item my_visits" id="my_visits" >\n' +
+            '        <div class="layui-inline">\n' +
+            '            <label class="layui-form-label"> {{$key+1}}</label>\n' +
+            '            <div class="layui-input-inline">\n' +
+            '                <input type="text" name="visits[]"  class="layui-input" id="test1" placeholder="" lay-key="6">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '        <div class="layui-inline" data-cid="id">\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <button class="layui-btn  layui-btn-normal" onclick="return delVisit()">删除</button>\n' +
+            '                <button class="layui-btn  layui-btn-normal"  onclick="return saveVisit(this)">保存</button>\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '    </div>';
+        $("#my_visits").after(html);
+        layui.laydate.render({
+            elem: '#test1'
+            ,type: 'datetime'
+        });
+        return false;
+    }
+
+    function delVisit(obj) {
+        var id = $(obj).siblings('button').attr('data-cid');
+        if(id===undefined)
+        {
+            $(obj).parent().parent().parent().remove();
+            return false;
+        }
+        $.ajax({
+            url:"{{:url('index/Api/delVisit')}}",
+            data:{id:id},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('删除成功',{icon:6});
+                    $(obj).parent().parent().parent().remove();
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+    }
+
+    function saveVisit(obj) {
+        var objs = obj;
+        var scheme = $(obj).parents('.my_visits').find('.layui-input').val();
+        var cid = $('input[name=id]').val();
+        var id = $(obj).attr('data-cid');
+        if(id===undefined)
+            id = null;
+        $.ajax({
+            url:"{{:url('index/Api/saveVisit')}}",
+            data:{id:id,cid:cid,scheme:scheme},
+            dataType:"json",
+            type:"POST",
+            success: function (data) {
+                if(data.code===2000)
+                {
+                    layer.alert('保存成功',{icon:6});
+                    $(objs).attr('data-cid',data.data.id);
+                }else
+                {
+                    layer.msg(data.msg,{icon:5});
+                }
+            },
+            error:function() {
+
+            }
+        });
+        return false;
+    }
+
+</script>
