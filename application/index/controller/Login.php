@@ -59,6 +59,12 @@ class Login extends Controller
 
     }
 
+    public function singOut()
+    {
+        Session::delete("userInfo");
+        return myJson();
+    }
+
 
 
 

@@ -22,6 +22,7 @@
                 'animated bounceIn',
             ], 0.01);
         });
+
     </script>
 </head>
 <body>
@@ -56,8 +57,8 @@
                 <i class="black icon fa fa-power-off fa-fw"></i><span class="title">关闭</span>
             </div>
             <div class="item"
-                 onclick="Win10.exit()">
-                <i class="black icon fa fa-power-off fa-fw"></i><span class="title">关闭</span>
+                 onclick="signOut()">
+                <i class="black icon fa fa-power-off fa-fw"></i><span class="title">退出</span>
             </div>
         </div>
         <div class="blocks">
@@ -95,4 +96,21 @@
     </div>
 </div>
 </body>
+<script>
+    function signOut() {
+        layer.confirm('你确定要退出吗?',function(index) {
+            layer.close(index);
+           $.ajax({
+               url:"{{:url('index/Login/singOut')}}",
+               type:"post",
+               dataType:"json",
+               success:function (data) {
+                   if(data.code===2000)
+                       window.location.reload();
+
+               }
+           });
+        });
+    }
+</script>
 </html>

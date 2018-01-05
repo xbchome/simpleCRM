@@ -416,7 +416,7 @@ window.Win10 = {
         },1000);
         //离开前警告
         document.body.onbeforeunload = function(event){
-            var rel = Win10.lang( '系统可能不会保存您所做的更改','The system may not save the changes you have made.');
+           // var rel = Win10.lang( '系统可能不会保存您所做的更改','The system may not save the changes you have made.');
             if(!window.event){
                 event.returnValue=rel;
             }else{
