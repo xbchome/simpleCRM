@@ -29,7 +29,7 @@ class Customers extends Model
            ->page($page,$limit)
             ->select();
        $sex =['女','男'];
-        foreach ($data as  &$v) {
+        foreach ($data as &$v) {
             $v['cm_sex'] = $sex[$v['cm_sex']];
         }
         $datas = [
