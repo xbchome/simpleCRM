@@ -3,8 +3,38 @@
 <head>
     <meta charset="UTF-8">
     {{include file="public/heads" /}}
-
     <title>添加客户</title>
+    <style>
+        .Label-data{
+            margin: 8px;
+            border: 1px solid #4288ce;
+            padding: 5px;
+            position: relative;
+        }
+
+        .Label-data a{
+            color: red;
+            /*position: relative;*/
+            position: absolute;
+            /*left: 21px;*/
+            right: -18px;
+            top:5px;
+            display: block;
+            width: 14px;
+            height: 14px;
+            z-index: 999;
+        }
+        .disp-m .layui-form-select{
+            display: none;
+        }
+        .disp-m select {
+            height: 40px;
+        }
+        .my-sss{
+            height: 40px;
+            width: 170px;
+        }
+    </style>
 </head>
 <body>
 <div class="content-body" >
@@ -58,7 +88,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label">客户类型</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="type"  autocomplete="off" class="layui-input">
+                    <input type="radio" name="type" value="0" title="法人" checked="">
+                    <input type="radio" name="type" value="1" title="ss">
                 </div>
             </div>
         </div>
@@ -72,27 +103,57 @@
                 <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
         </div>
 
-        <div class="layui-form-item my_plan" id="my_plan">
-            <div class="layui-inline">
+        <!--<div class="layui-form-item my_plan" id="my_plan">-->
+            <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label"> 产品方案</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="tel" name="scheme[]"  autocomplete="off" class="layui-input">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-inline">-->
+                <!--<div class="layui-input-block">-->
+                    <!--<button class="layui-btn  layui-btn-normal" onclick="return addPlan()">增加</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="layui-form-item my_plan">
+            <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label"> 产品方案</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="tel" name="scheme[]"  autocomplete="off" class="layui-input">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div style="display: inline" id="my-inline">
                 <label class="layui-form-label"> 产品方案</label>
-                <div class="layui-input-inline">
-                    <input type="tel" name="scheme[]"  autocomplete="off" class="layui-input">
-                </div>
+
+
             </div>
-            <div class="layui-inline">
-                <div class="layui-input-block">
-                    <button class="layui-btn  layui-btn-normal" onclick="return addPlan()">增加</button>
+
+
+            <div class="layui-inline my-sss">
+                <div class="layui-input-block disp-m">
+                    <select name="quiz" onchange="tableS('sss')" style="display: block;">
+                        <option value="">请选择方案</option>
+                        {{foreach $data as $vo }}
+
+                        {{if condition="empty($vo['son'])==true"}}
+                        <option value="{{$vo['id']}}" id="d-{{$vo['id']}}" data-txt="{{$vo['name']}}">{{$vo['name']}}</option>
+                        {{else/ }}
+                        <optgroup label="{{$vo['name']}}">
+                        {{foreach $vo['son'] as $v }}
+                            <option value="{{$v['id']}}" id="d-{{$v['id']}}" data-txt="{{$vo['name']}}:{{$v['name']}}">{{$v['name']}}</option>
+                        {{/foreach}}
+                        </optgroup>
+                        {{/if}}
+                        {{/foreach}}
+
+
+
+                    </select>
                 </div>
             </div>
         </div>
-
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">上门时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="visits" class="layui-input" id="test5" placeholder="" lay-key="6">
-                </div>
-            </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">跟进情况</label>
@@ -214,6 +275,9 @@
         $(obj).parent().parent().parent().remove();
         return false;
     }
+
+
+
 </script>
 
 </body>

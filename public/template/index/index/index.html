@@ -52,13 +52,14 @@
     </div>
     <div id="win10-menu" class="hidden">
         <div class="list win10-menu-hidden animated animated-slideOutLeft">
-            <div class="item"
-                 onclick="Win10.exit()">
-                <i class="black icon fa fa-power-off fa-fw"></i><span class="title">关闭</span>
-            </div>
+
             <div class="item"
                  onclick="signOut()">
                 <i class="black icon fa fa-power-off fa-fw"></i><span class="title">退出</span>
+            </div>
+            <div class="item"
+                 onclick="Win10.openUrl('{{:url(\'index/UserManage/editPassword\')}}','修改密码')">
+                <img src="__INDEX-STATIC__/img/icon/xiugaimima.png" style="width: 30px;height:30px;margin-right: 10px;" /><span class="title">修改密码</span>
             </div>
         </div>
         <div class="blocks">
@@ -68,7 +69,7 @@
                     <div class="content">
                         <div style="font-size:100px;line-height: 132px;margin: 0 auto ;display: block"
                              class="fa fa-fw fa-windows win10-block-content-text"></div>
-                        <div class="win10-block-content-text" style="font-size: 22px">欢迎使用 Win10-UI</div>
+                        <div class="win10-block-content-text" style="font-size: 22px">欢迎使用 客户管理系统</div>
                     </div>
                 </div>
             </div>

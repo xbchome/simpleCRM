@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 use app\index\model\Customers;
 use app\index\model\Follow;
+use app\index\model\Product;
 use app\index\model\Scheme;
 use app\index\model\Users;
 use app\index\model\Visits;
@@ -27,10 +28,19 @@ class CustomerManage extends Common
             $limit = input('get.limit',10);
             $uid = input('get.uid',0);
             $map = $uid==0?[]:['c.uid'=>$uid];
-            $data =  (new Customers)->getCustomersList($page,$limit,$map,$this->userInfo['id']);
+            $user = Users::get($this->userInfo['id']);
+            $mapor =[];
+            if($user['is_captain'])
+                $mapor['u.position'] = ['=',$user['position']];
+            $data =  (new Customers)->getCustomersList($page,$limit,$map,$this->userInfo['id'],$mapor);
             return json($data);
         }
-           $users = (new Users)->getFrameworkUser($this->userInfo['position'],$this->userInfo['id']);
+        $user = Users::get($this->userInfo['id']);
+        $mapor=[];
+        if($user['is_captain'])
+            $mapor['u.position'] = ['=',$user['position']];
+
+           $users = (new Users)->getFrameworkUser($this->userInfo['position'],$this->userInfo['id'],$mapor);
         return view('',[
             'users' =>$users
         ]);
@@ -43,8 +53,15 @@ class CustomerManage extends Common
      */
     public function create()
     {
-        //
-        return view();
+        $product = Product::all();
+        if($product) {
+            $product = collection($product)->toArray();
+        }
+        $data = setProduct($product);
+
+        return view('',[
+            'data' =>$data
+        ]);
     }
 
     /**
@@ -58,41 +75,30 @@ class CustomerManage extends Common
         //return myJson();
        $data = [
            'cm_name'        => $request->post('cm_name',null,'htmlspecialchars'),
-           'cm_phone'       => $request->post('phone'),
-           'cm_sex'         => $request->post('sex'),
-           'cm_type'        => $request->post('type'),
-           'company'        => $request->post('company',null,'htmlspecialchars'),
-           'industry'       => $request->post('industry',null,'htmlspecialchars'),
-           'describes'      => $request->post('describes',null,'htmlspecialchars'),
-           'demand'         => $request->post('demand',null,'htmlspecialchars')
+           'cm_phone'       => $request->post('phone'),  // 手机
+           'cm_sex'         => $request->post('sex'), // 性别
+           'cm_type'        => $request->post('type'), // 类型
+           'company'        => $request->post('company',null,'htmlspecialchars'),  // 公司
+           'industry'       => $request->post('industry',null,'htmlspecialchars'),  // 行业
+           'describes'      => $request->post('describes',null,'htmlspecialchars'), // 描述
+           'demand'         => $request->post('demand',null,'htmlspecialchars')  // 需求
        ];
+
+        $schemes = empty($_POST['fananser'])?[]:$_POST['fananser']; // 接收方案
+        $data['schemes'] = json_encode($schemes,JSON_UNESCAPED_UNICODE);  // 将方案转成json
         $validate = validate('CustomersValidate');
         if(!$validate->check($data))
             return myJson(-1,$validate->getError(),['ss']);
         $data['create_time'] = time();
         $data['update_time'] = time();
         $data['uid']    = $this->userInfo['id'];
-        $schemes = $_POST['scheme'];  // 方案
-//        dump($data);die;
-        $visits['visits_time'] = $request->post('visits'); // 上门时间
+//        $visits['visits_time'] = $request->post('visits'); // 上门时间
         $follow['contents'] = $request->post('follow'); // 跟进情况
         $follow['create_time'] = time();
         Db::startTrans();
         try {
             $c = Customers::create($data); // 创建客户
-            $dataScheme=[];
-            foreach($schemes as $v)
-            {
-                if(!empty($v))
-                    $dataScheme[] = ['scheme'=>$v,'cid'=>$c->id];
-            }
-            if(empty($dataScheme))
-                $dataScheme[] = ['scheme'=>'','cid'=> $c->id];
-           // dump($dataScheme);
-            (new Scheme)->saveAll($dataScheme);  // 添加方案
-            $visits['cid']  = $c->id;
-            $follow['cid'] = $c->id;
-            Visits::create($visits);
+            $follow['cid'] = $c->id;  // 添加方案
             Follow::create($follow);
             Db::commit();
             return myJson();
@@ -112,11 +118,14 @@ class CustomerManage extends Common
     public function read($id)
     {
         $customer = new Customers();
-        $data = $customer->relation('follows,schemes,visitss')->where('id','=',$id)->find();
+        $data = $customer->relation('follows,visitss')->where('id','=',$id)->find();
         if(empty($data))
             die("你要编辑的客户不存在或是已经删除");
+        $schemes = $data['schemes'];
+        $schemes = empty($schemes)?[]: json_decode($schemes);
         return view('',[
-            'data'  => $data
+            'data'  => $data,
+            'schemes'   => $schemes
         ]);
     }
 
@@ -129,11 +138,27 @@ class CustomerManage extends Common
     public function edit($id)
     {
         $customer = new Customers();
-        $data = $customer->relation('follows,schemes,visitss')->where('id','=',$id)->find();
+        $data = $customer->relation('follows,visitss')->where('id','=',$id)->find();
         if(empty($data))
             die("你要编辑的客户不存在或是已经删除");
+        $product = Product::all();  // 查所有的解决方案
+        if($product) {
+            $product = collection($product)->toArray();
+        }
+        $product = setProduct($product);  // 处理客户方案的数据
+        $schemes = $data['schemes'];
+        $schemes = empty($schemes)?[]: json_decode($schemes);
+        $schemeType = [];
+        foreach($schemes as $key=>$v)
+        {
+            $schemeType[$key] = "disabled";
+        }
+
         return view('',[
-            'data'  => $data
+            'data'  => $data,
+            'schemes'   => $schemes,
+            'schemeType' =>$schemeType,
+            'product'   => $product,
         ]);
     }
 
@@ -161,7 +186,8 @@ class CustomerManage extends Common
         if(!$validate->check($data))
             return myJson(-1,$validate->getError(),['ss']);
         $data['update_time'] = time();
-
+        $schemes = empty($_POST['fananser'])?[]:$_POST['fananser']; // 接收方案
+        $data['schemes'] = json_encode($schemes,JSON_UNESCAPED_UNICODE);  // 将方案转成json
 
         try {
             $c = Customers::where('id','=',$id)->update($data); // 创建客户

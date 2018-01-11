@@ -33,7 +33,8 @@ Route::post([
     'save-users'        => 'index/UserManage/save',
     'doLogin'           => 'index/Login/doLogin',       // 登陆提交
     'update-user'       => 'index/Login/update',      // 修改用户信息提交
-    'singOut'           => 'index/Login/singOut'    // 退出登录
+    'singOut'           => 'index/Login/singOut' ,   // 退出登录
+    'update-password'   => 'index/UserManage/updatePassword'  // 修改密码
 ]);
 
 Route::delete([

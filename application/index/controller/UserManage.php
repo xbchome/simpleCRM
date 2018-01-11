@@ -28,18 +28,29 @@ class UserManage extends Common
         {
             $page = input('get.page',1);
             $limit = input('get.limit',10);
-            $count = Users::where('state','>=',1)->count();
-            $data  = Users::where('state','>=',1)->page($page,$limit)->select();
+//            $count = Users::where('state','>=',1)->count();
+//            $data  = Users::where('state','>=',1)->page($page,$limit)->select();
+            $user = Users::get($this->userInfo['id']);
+            $mapOr['u.id'] =['=',$user['id']];
+            $map=[];
+            if($user['is_captain']==1)
+            {
+                $map['u.position']=['=',$user['position']];
+            }
+
+
+            $data = (new Users())->getUsers($mapOr,$user['position'],$map,$page,$limit);
+
             $sex = [1=>'男',2=>'女'];
-            foreach($data as &$vo)
+            foreach($data['data'] as &$vo)
             {
                 $vo['sex'] = $sex[$vo['sex']];
             }
             $datas = [
                 'msg'   =>"",
                 'code'  =>0,
-                'count' => $count,
-                'data'  =>$data
+                'count' => $data['count'],
+                'data'  =>$data['data']
             ];
             return json($datas);
         }
@@ -88,6 +99,7 @@ class UserManage extends Common
             'phone'         => $request->post('phone',null,'trim'),
             'position'       => $request->post('position',null),
             'sex'       => $request->post('sex',1),
+            'is_captain'    => $request->post('is_captain',0),
             '__token__'     => $request->post('__token__',null),
         ];
         $validate = validate('UsersValidate');
@@ -97,7 +109,10 @@ class UserManage extends Common
         if(empty($framework))
             return myJson(-1,'部门不存在');
         unset($data['__token__']); // 删除__token__
-        $data['position_cn']  = $framework['title'];
+        if($data['is_captain']==1)
+            $data['position_cn']  = $framework['title'].'-队长';
+        else
+            $data['position_cn']  = $framework['title'];
         $data['create_time']  = time();
         $data['update_time']  = time();
         $data['log_password'] = md5($data['create_time'].$data['log_password']); // 将用户的创建时间和明文密码加密作为保存密码
@@ -210,6 +225,7 @@ class UserManage extends Common
             'phone'         => $request->post('phone',null,'trim'),
             'position'      => $request->post('position',null),   // 部门
             'sex'           => $request->post('sex',1),
+            'is_captain'    => $request->post('is_captain',0),
             '__token__'     => $request->post('__token__',null),
         ];
         $rules = [
@@ -231,6 +247,10 @@ class UserManage extends Common
         $framework = FrameworkModel::get($data['position']);
         if(empty($framework))
             return myJson(-1,'部门不存在或者是已经被删除');
+        if($data['is_captain']==1)
+            $data['position_cn']  = $framework['title'].'-队长';
+        else
+            $data['position_cn']  = $framework['title'];
         unset($data['__token__']); // 删除__token__
         $data['position_cn']  = $framework['title'];
         $data['update_time']  = time();  // 修改时间
@@ -278,6 +298,36 @@ class UserManage extends Common
             return myJson();
         } catch (Exception $exception) {
             myJson(-1,$exception->getMessage());
+        }
+
+
+    }
+
+    public function editPassword()
+    {
+        return view('editPassword');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $data['log_password'] = $request->post('log_password',null,'trim,htmlspecialchars');
+        $passwrod2 = $request->post('logs_password',null,'trim,htmlspecialchars');
+        $first_password     = $request->post('password',null,'trim,htmlspecialchars');
+        //$user = Db::name('users')->where('id','=',$this->userInfo['id'])->field('id,log_password,create_time')->find();
+        $user = Users::get($this->userInfo['id']);
+        if($user['log_password']!==md5($user->getData('create_time').$first_password))
+            return myJson(-1,'原始密码不正确！');
+        if($data['log_password']!==$passwrod2)
+            return myJson(-1,'两次密码输入不一致'.$data['log_password'].'+'.$passwrod2);
+
+        if(!preg_match('/^(?![^a-zA-Z]+$)(?!\D+$).{6,15}$/',$data['log_password']))
+            return myJson(-1,'请输入包含数字、字母的6-12位密码');
+        try {
+            $user->log_password = md5($user->getData('create_time').$data['log_password']);
+            $user->save();
+            return myJson();
+        } catch (Exception $exception) {
+            return myJson(-1,'更新失败');
         }
 
 

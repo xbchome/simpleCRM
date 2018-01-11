@@ -36,11 +36,20 @@
             <td>{{$value['title']}}</td>
             <td>{{$value['describes']}}</td>
             <td>
+
+                {{if condition="in_array('index/usergroup/edit',$glp_menu)==true"}}
                 <button class="layui-btn" title="编辑" onclick="Win10.openUrl('{{:url(\'index/UserGroup/edit\',[\'id\'=>$value[\'id\']])}}',
                  '修改用户组')"><i class="layui-icon"></i></button>
+                {{/if}}
+                {{if condition="in_array('index/usergroup/allotauthshow',$glp_menu)==true"}}
                 <button class="layui-btn" onclick="Win10.openUrl('{{:url(\'index/UserGroup/allotAuthShow\',[\'id\'=>$value[\'id\']])}}',
                  '权限分配')" title="分配权限"><i class="layui-icon"></i></button>
+                {{/if}}
+                {{if condition="in_array('index/usergroup/delete',$glp_menu)==true"}}
                 <button class="layui-btn layui-btn-danger" onclick="deletes({{$value['id']}})" title="删除"><i class="layui-icon"></i></button>
+                {{/if}}
+
+
             </td>
         </tr>
         {{/foreach}}

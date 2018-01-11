@@ -31,7 +31,7 @@
         </div>
         <!-- 搜索 -->
         <div class="demoTable" style="float: right;margin-bottom: 10px;"  >
-            {{if condition="in_array('index/customermanage/shift',$glp_menu)==true"}}
+
             <button class="layui-btn" onclick="searchKh()" >搜索</button>
             <select name="searchKh" lay-filter="aihao" class="layui-input" style="width:200px; height:40px;float: left; margin-right:10px;  ">
                 <option value="">请选择员工</option>
@@ -39,7 +39,7 @@
                 <option value="{{$v['id']}}">{{$v['user_name']}}</option>
                 {{/foreach}}
             </select>
-            {{/if}}
+
         </div>
 
         <table class="layui-table" lay-data="{width: 1090, height:560, url:'{{:url(\'index/CustomerManage/index\')}}', page:true, id:'idTest'}" lay-filter="demo">

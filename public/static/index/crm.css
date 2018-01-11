@@ -14,3 +14,34 @@ body{
 .xin {
     color: red;
 }
+
+
+.Label-data{
+    margin: 8px;
+    border: 1px solid #4288ce;
+    padding: 5px;
+    position: relative;
+}
+
+.Label-data a{
+    color: red;
+    /*position: relative;*/
+    position: absolute;
+    /*left: 21px;*/
+    right: -18px;
+    top:5px;
+    display: block;
+    width: 14px;
+    height: 14px;
+    z-index: 999;
+}
+.disp-m .layui-form-select{
+    display: none;
+}
+.disp-m select {
+    height: 40px;
+}
+.my-sss{
+    height: 40px;
+    width: 170px;
+}

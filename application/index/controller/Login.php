@@ -25,20 +25,19 @@ class Login extends Controller
 
     public function doLogin(Request $request)
     {
-        $error  = Session::get('loginError');
-        if(empty($error))
-            Session::set('loginError',0);
+        $error  = Session::get('loginError');  // 先获取用户密码输入错误次数
+        if(empty($error))    // 如果为空
+            Session::set('loginError',0);  // 初始化为0
         $userName = $request->post("logname",null,"trim,htmlspecialchars");
         $password = $request->post("logpass",null,"trim,htmlspecialchars");
         if(empty($userName) && empty($password))
             return myJson(-1,'用户名和密码不能为空',['c'=>$error]);
-        if($error>=4)
+        if($error>=4)    // 当密码输入错误超过4次或者以上的时候开启验证码验证
         {
             $code = $request->post('code');
             if(!captcha_check($code))
                 return myJson(-2,'验证码有误');
         }
-       // $user = Users::get(['log_name'=>$userName]);
         $user = Db::name('users')->where('log_name','=',$userName)->find();
         if(empty($user))
         {
@@ -61,6 +60,7 @@ class Login extends Controller
 
     public function singOut()
     {
+
         Session::delete("userInfo");
         return myJson();
     }

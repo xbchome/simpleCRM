@@ -148,7 +148,7 @@ class UserGroup extends Controller
         $dataGroup = AuthGroup::get($id);
         $rule = AuthRule::all();
         $rele = (new RecursionType)->getArray($rule);
-        return view('',[
+        return view('allotAuthShow',[
             'groupInfo' => $dataGroup,
             'reules'    => $rele,
             'userRules'    => explode(',',$dataGroup['rules']),
@@ -181,7 +181,7 @@ class UserGroup extends Controller
             return myJson();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-            return myJson(-1,'修改出错');
+            return myJson(-1,$exception->getMessage());
         }
     }
 }

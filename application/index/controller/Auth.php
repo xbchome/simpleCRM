@@ -11,7 +11,7 @@ use think\Exception;
 use think\Request;
 use app\index\model\AuthGroup as AuthGroupModel;
 
-class Auth extends Controller
+class Auth extends Common
 {
     /**
      * 显示资源列表

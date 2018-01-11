@@ -44,6 +44,7 @@
                 <input type="radio" name="sex" value="2" title="女">
             </div>
             </div>
+
         </div>
 
         <div class="layui-form-item">
@@ -72,7 +73,18 @@
                 </select>
             </div>
         </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">是否为队长</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_captain" value="1" title="是" >
+                <input type="radio" name="is_captain" value="0" title="否" checked="">
+                <span style="color: #999;"> 提示:队长只在最后一级，队长可以查看所在级的所有用户信息和客户</span>
+            </div>
 
+        </div>
+
+    </div>
         <div class="layui-form-item">
             <label class="layui-form-label">权限</label>
             <div class="layui-input-block">

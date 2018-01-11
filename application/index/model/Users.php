@@ -2,6 +2,7 @@
 
 namespace app\index\model;
 
+use think\Db;
 use think\Model;
 
 class Users extends Model
@@ -23,14 +24,38 @@ class Users extends Model
         return false;
     }
 
-    public function getFrameworkUser($position,$uid)
+    public function getFrameworkUser($position,$uid,$map='')
     {
        return $this->name('framework')
             ->alias('f')
             ->join('users u','f.id=u.position')
             ->where('f.paht','like','%,'.$position.',%')
             ->whereOr('u.id','=',$uid)
+           ->whereOr($map)
             ->field('u.id,u.user_name')
             ->select();
+    }
+
+    /**
+     * 根据组织架构获取用户信息
+     */
+    public function getUsers($mapOr,$position,$map=[],$page=1,$limit=10)
+    {
+        $count = Db::name('framework')
+            ->alias('f')
+            ->join("users u",'f.id=u.position')
+            ->whereOr('f.paht','like','%,'.$position.',%')
+            ->whereOr($map)
+            ->whereOr($mapOr)
+            ->count();
+       $data = Db::name('framework')
+            ->alias('f')
+            ->join("users u",'f.id=u.position')
+            ->whereOr($map)
+           ->whereOr('f.paht','like','%,'.$position.',%')
+            ->whereOr($mapOr)
+           ->page($page,$limit)
+            ->select();
+       return ['count'=>$count,'data'=>$data];
     }
 }

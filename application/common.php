@@ -22,9 +22,27 @@ function myJson($code =2000,$msg='success',$data=[])
 }
 
 
-function is_menu($munes,$name)
-{
-    if(in_array($name,$munes))
-        return true;
 
+
+function setProduct($product)
+{
+    $data = [];
+    foreach ($product as $key=>$value)
+    {
+        if($value['pid']!=0)
+            continue;
+
+        $data[$key] = $value;
+        $data[$key]['son'] = [];
+        unset($product[$key]);
+        foreach($product as $k=>$v)
+        {
+            if($value['id']== $v['pid'])
+            {
+                $data[$key]['son'][] = $v;
+                unset($product[$k]);
+            }
+        }
+    }
+    return $data;
 }

@@ -7,7 +7,7 @@ use think\Model;
 class Customers extends Model
 {
     //
-    public function getCustomersList($page=1,$limit=10,$map=[],$uid)
+    public function getCustomersList($page=1,$limit=10,$map=[],$uid,$mapor)
     {
       $count =  $this->name('framework')
             ->alias('a')
@@ -15,6 +15,7 @@ class Customers extends Model
             ->join('__CUSTOMERS__ c','c.uid=u.id')
             ->whereOr('c.uid','=',$uid)
             ->whereOr('paht','like','%'.$uid.'%')
+            ->whereOr($mapor)
             ->where($map)
             ->count();
 
@@ -25,12 +26,15 @@ class Customers extends Model
             ->whereOr('c.uid','=',$uid)
             ->whereOr('paht','like','%'.$uid.'%')
             ->field('c.id,user_name,cm_name,cm_phone,cm_sex,cm_type,company,industry,c.create_time')
+           ->whereOr($mapor)
             ->where($map)
            ->page($page,$limit)
             ->select();
        $sex =['女','男'];
+       $type = ['法人','sfs'];
         foreach ($data as &$v) {
             $v['cm_sex'] = $sex[$v['cm_sex']];
+            $v['cm_type'] = $type[$v['cm_type']];
         }
         $datas = [
             'msg'   =>"",

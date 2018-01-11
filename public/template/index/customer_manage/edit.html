@@ -60,7 +60,11 @@
             <div class="layui-inline">
                 <label class="layui-form-label">客户类型</label>
                 <div class="layui-input-inline">
-                    <input type="tel" value="{{$data['cm_type']}}" name="type"  autocomplete="off" class="layui-input">
+                    {{php}}
+                        $cmtype[$data['cm_type']] = 'checked';
+                    {{/php}}
+                    <input type="radio" name="type" {{php}} echo @$cmtype[0] {{/php}} value="0" title="法人" >
+                    <input type="radio" name="type" {{php}} echo @$cmtype[1] {{/php}} value="1" title="ss">
                 </div>
             </div>
         </div>
@@ -74,7 +78,42 @@
 
 
         </div>
+        <div class="layui-form-item my_plan">
+            <div style="display: inline" id="my-inline">
+                <label class="layui-form-label"> 产品方案</label>
+                {{foreach $schemes as $k=>$v }}
+                <span class="Label-data" id="del-{{$k}}">
+                    <input type="hidden" name="fananser[{{$k}}]" value="{{$v}}"/>
+                    {{$v}}
+                <a href="javascript:void (0);" data-id="{{$k}}" onclick="delLabel(this)">X</a>
+                </span>
+                {{/foreach}}
+            </div>
 
+
+            <div class="layui-inline my-sss">
+                <div class="layui-input-block disp-m">
+                    <select name="quiz" onchange="tableS('sss')" style="display: block;">
+                        <option value="">请选择方案</option>
+                        {{foreach $product as $vo }}
+
+                        {{if condition="empty($vo['son'])==true"}}
+                        <option value="{{$vo['id']}}" id="d-{{$vo['id']}}" {{php}} echo @$schemeType[$vo['id']]; {{/php}} data-txt="{{$vo['name']}}">{{$vo['name']}}</option>
+                        {{else/ }}
+                        <optgroup label="{{$vo['name']}}">
+                            {{foreach $vo['son'] as $v }}
+                            <option value="{{$v['id']}}" {{php}} echo @$schemeType[$v['id']]; {{/php}} id="d-{{$v['id']}}" data-txt="{{$vo['name']}}:{{$v['name']}}">{{$v['name']}}</option>
+                            {{/foreach}}
+                        </optgroup>
+                        {{/if}}
+                        {{/foreach}}
+
+
+
+                    </select>
+                </div>
+            </div>
+        </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
@@ -92,45 +131,6 @@
             </div>
         </div>
     </form>
-
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>产品方案</legend>
-    </fieldset>
-
-    {{foreach $data['schemes'] as $key=>$value }}
-
-    {{if condition="$key==0" }}
-    <div class="layui-form-item my_plan" sss="dddd" id="my_plan">
-        <div class="layui-inline">
-            <label class="layui-form-label"> {{$key+1}}</label>
-            <div class="layui-input-inline">
-                <input type="tel" value="{{$value['scheme']}}" name="scheme[]"  autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline" data-cid="id">
-            <div class="layui-input-block">
-                <button class="layui-btn  layui-btn-normal" onclick="return addPlan()">新增</button>
-                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveScheme(this)">保存</button>
-            </div>
-        </div>
-    </div>
-    {{else/}}
-    <div class="layui-form-item my_plan" >
-        <div class="layui-inline">
-            <label class="layui-form-label"> {{$key+1}}</label>
-            <div class="layui-input-inline">
-                <input type="tel" name="scheme[]"  value="{{$value['scheme']}}"  autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline" data-cid="id">
-            <div class="layui-input-block">
-                <button class="layui-btn  layui-btn-normal" onclick="return delPlan(this)">删除</button>
-                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveScheme(this)">保存</button>
-            </div>
-        </div>
-    </div>
-    {{/if}}
-    {{/foreach}}
 
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
@@ -166,45 +166,6 @@
             <div class="layui-input-block">
                 <button class="layui-btn  layui-btn-normal" onclick="return delFollow(this)">删除</button>
                 <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveFollow(this)">保存</button>
-            </div>
-        </div>
-    </div>
-    {{/if}}
-    {{/foreach}}
-
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>上门时间</legend>
-    </fieldset>
-
-    {{foreach $data['visitss'] as $key=>$value }}
-
-    {{if condition="$key==0" }}
-    <div class="layui-form-item my_visits" id="my_visits" >
-        <div class="layui-inline">
-            <label class="layui-form-label"> {{$key+1}}</label>
-            <div class="layui-input-inline">
-                <input type="text" name="visits[]" value="{{$value['visits_time']}}" class="layui-input" id="test5" placeholder="" lay-key="6">
-            </div>
-        </div>
-        <div class="layui-inline" data-cid="id">
-            <div class="layui-input-block">
-                <button class="layui-btn  layui-btn-normal" onclick="return addVisit()">新增</button>
-                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveVisit(this)">保存</button>
-            </div>
-        </div>
-    </div>
-    {{else/}}
-    <div class="layui-form-item my_visits"  >
-        <div class="layui-inline">
-            <label class="layui-form-label"> {{$key+1}}</label>
-            <div class="layui-input-inline">
-                <input type="text" name="visits[]" value="{{$value['visits_time']}}" class="layui-input" id="test5" placeholder="" lay-key="6">
-            </div>
-        </div>
-        <div class="layui-inline" data-cid="id">
-            <div class="layui-input-block">
-                <button class="layui-btn  layui-btn-normal" onclick="return delVisit(this)">删除</button>
-                <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveVisit(this)">保存</button>
             </div>
         </div>
     </div>
