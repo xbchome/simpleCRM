@@ -10,7 +10,6 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-use app\index\model\AuthRule;
 function myJson($code =2000,$msg='success',$data=[])
 {
     $data = [

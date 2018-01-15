@@ -10,7 +10,7 @@ use app\index\model\Users;
 use think\Db;
 use think\Exception;
 use think\Request;
-use app\index\Model\Framework as FrameworkModel;
+use app\index\model\Framework as FrameworkModel;
 use my\RecursionType;
 
 class UserManage extends Common
@@ -226,7 +226,8 @@ class UserManage extends Common
             'position'      => $request->post('position',null),   // 部门
             'sex'           => $request->post('sex',1),
             'is_captain'    => $request->post('is_captain',0),
-            '__token__'     => $request->post('__token__',null),
+            '__token__'     => $request->post('__token__',
+                null),
         ];
         $rules = [
             'log_name|用户名'      => 'require|min:5',

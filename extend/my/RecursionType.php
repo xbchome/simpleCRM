@@ -75,7 +75,7 @@ class RecursionType
 
         $nbsp = str_repeat('&nbsp;&nbsp;&nbsp;',$level);
         if($level>1)
-            $nbsp.='├';
+            $nbsp.='├&nbsp;&nbsp;';
         foreach ($data as $key=>$value)
         {
             if($pid == $value['pid'])
@@ -84,12 +84,13 @@ class RecursionType
                 unset($data[$key]);
                 $tempb = self::getFrameworks($data,$value['id'],++$level);
                 $value['title'] =$nbsp.''.$value['title'];
-                if(empty($tempb))
-                    $value['title'] = str_replace('├','∟',$value['title']);
+//                if(empty($tempb))
+//                    $value['title'] = str_replace('├','∟',$value['title']);
                 $tempa[] = $value;
                 $tempa = array_merge($tempa,$tempb);
             }
         }
+        end($tempa)['title'] =  str_replace('├','∟',end($tempa)['title']);
         return $tempa;
     }
 
