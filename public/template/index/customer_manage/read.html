@@ -28,14 +28,23 @@
                 </div>
                 <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
             </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">公司名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" disabled name="company" value="{{$data['company']}}"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
         </div>
 
 
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">公司名</label>
+                <label class="layui-form-label">客户类型</label>
                 <div class="layui-input-inline">
-                    <input type="tel" disabled name="company" value="{{$data['company']}}"  autocomplete="off" class="layui-input">
+                    {{php}}
+                        $cm_type_str = ['法人','普通'];
+                    {{/php}}
+                    <input type="tel" value="{{$cm_type_str[$data['cm_type']]}}" disabled name="type"  autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -55,12 +64,20 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">客户类型</label>
-                <div class="layui-input-inline">
 
-                    <input type="tel" value="{{$data['cm_type']}}" disabled name="type"  autocomplete="off" class="layui-input">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_phone2']}}" disabled name="phone2" lay-verify="required|phone" autocomplete="off" class="layui-input ">
                 </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_phone3']}}" disabled name="phone3" lay-verify="required|phone" autocomplete="off" class="layui-input ">
+                </div>
+                <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
             </div>
         </div>
 

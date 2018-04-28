@@ -29,22 +29,34 @@
                 </div>
                 <!--<div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>-->
             </div>
-        </div>
-
-
-        <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">公司名</label>
                 <div class="layui-input-inline">
                     <input type="tel" name="company" value="{{$data['company']}}"  autocomplete="off" class="layui-input">
                 </div>
             </div>
+        </div>
+
+
+        <div class="layui-form-item">
+
             <div class="layui-inline">
                 <label class="layui-form-label">性别</label>
                     {{php}} $sex [$data['cm_sex']]='checked'; {{/php}}
                 <div class="layui-input-block">
                     <input type="radio" name="sex" value="1" title="男" {{php}} echo @$sex[1] {{/php}}>
                     <input type="radio" name="sex" value="0" title="女" {{php}} echo @$sex[0] {{/php}}>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline">
+                    {{php}}
+                    $cmtype[$data['cm_type']] = 'checked';
+                    {{/php}}
+                    <input type="radio" name="type" {{php}} echo @$cmtype[0] {{/php}} value="0" title="法人" >
+                    <input type="radio" name="type" {{php}} echo @$cmtype[1] {{/php}} value="1" title="普通">
                 </div>
             </div>
         </div>
@@ -57,16 +69,23 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux"><span class="xin">*</span></div>
             </div>
+
             <div class="layui-inline">
-                <label class="layui-form-label">客户类型</label>
+                <label class="layui-form-label">手机</label>
                 <div class="layui-input-inline">
-                    {{php}}
-                        $cmtype[$data['cm_type']] = 'checked';
-                    {{/php}}
-                    <input type="radio" name="type" {{php}} echo @$cmtype[0] {{/php}} value="0" title="法人" >
-                    <input type="radio" name="type" {{php}} echo @$cmtype[1] {{/php}} value="1" title="ss">
+                    <input type="tel" value="{{$data['cm_phone2']}}" name="phone2"  autocomplete="off" class="layui-input">
                 </div>
             </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="tel" value="{{$data['cm_phone3']}}" name="phone3"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+
         </div>
 
         <div class="layui-form-item">
@@ -123,13 +142,14 @@
         </div>
 
         <br/>
-
+        {{if condition="$is_update==1"}}
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
+        {{/if}}
     </form>
 
 
@@ -148,10 +168,12 @@
             </div>
         </div>
         <div class="layui-inline" data-cid="id">
+            {{if condition="$is_update==1"}}
             <div class="layui-input-block">
                 <button class="layui-btn  layui-btn-normal" onclick="return addFollow()">新增</button>
                 <button class="layui-btn  layui-btn-normal" data-cid="{{$value['id']}}" onclick="return saveFollow(this)">保存</button>
             </div>
+            {{/if}}
         </div>
     </div>
     {{else/}}

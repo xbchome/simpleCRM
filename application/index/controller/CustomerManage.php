@@ -76,6 +76,8 @@ class CustomerManage extends Common
        $data = [
            'cm_name'        => $request->post('cm_name',null,'htmlspecialchars'),
            'cm_phone'       => $request->post('phone'),  // 手机
+           'cm_phone2'       => $request->post('phone2',''),  // 手机
+           'cm_phone3'       => $request->post('phone3',''),  // 手机
            'cm_sex'         => $request->post('sex'), // 性别
            'cm_type'        => $request->post('type'), // 类型
            'company'        => $request->post('company',null,'htmlspecialchars'),  // 公司
@@ -117,10 +119,18 @@ class CustomerManage extends Common
      */
     public function read($id)
     {
+        $uid = $this->userInfo['id'];
+        $is_admin = Users::get($uid);
         $customer = new Customers();
         $data = $customer->relation('follows,visitss')->where('id','=',$id)->find();
         if(empty($data))
-            die("你要编辑的客户不存在或是已经删除");
+            die("你要查看的客户不存在或是已经删除");
+        if($data['uid'] != $uid && $is_admin->is_super!=10)
+        {
+            $data['cm_phone3'] ='*******';
+            $data['cm_phone2'] ='*******';
+            $data['cm_phone'] ='*******';
+        }
         $schemes = $data['schemes'];
         $schemes = empty($schemes)?[]: json_decode($schemes);
         return view('',[
@@ -137,6 +147,8 @@ class CustomerManage extends Common
      */
     public function edit($id)
     {
+        $uid = $this->userInfo['id'];
+        $is_admin = Users::get($uid);
         $customer = new Customers();
         $data = $customer->relation('follows,visitss')->where('id','=',$id)->find();
         if(empty($data))
@@ -147,6 +159,14 @@ class CustomerManage extends Common
         }
         $product = setProduct($product);  // 处理客户方案的数据
         $schemes = $data['schemes'];
+        $is_update = 1;
+        if($data['uid'] != $uid && $is_admin->is_super!=10)
+        {
+            $data['cm_phone3'] ='*******';
+            $data['cm_phone2'] ='*******';
+            $data['cm_phone'] ='*******';
+            $is_update = -1;
+        }
         $schemes = empty($schemes)?[]: json_decode($schemes);
         $schemeType = [];
         foreach($schemes as $key=>$v)
@@ -159,6 +179,7 @@ class CustomerManage extends Common
             'schemes'   => $schemes,
             'schemeType' =>$schemeType,
             'product'   => $product,
+            'is_update' => $is_update
         ]);
     }
 
@@ -175,6 +196,8 @@ class CustomerManage extends Common
         $data = [
             'cm_name'        => $request->post('cm_name',null,'htmlspecialchars'),
             'cm_phone'       => $request->post('phone'),
+            'cm_phone2'       => $request->post('phone2',''),  // 手机
+            'cm_phone3'       => $request->post('phone3',''),  // 手机
             'cm_sex'         => $request->post('sex'),
             'cm_type'        => $request->post('type'),
             'company'        => $request->post('company',null,'htmlspecialchars'),
